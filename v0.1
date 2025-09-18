@@ -1,0 +1,83 @@
+#include <iostream>
+#include <iomanip>
+#include <vector>
+#include <string>
+#include <algorithm>
+
+using std::cout;
+using std::cin;
+using std::endl;
+using std::string;
+using std::vector;
+using std::setw;
+using std::left;
+using std::right;
+
+struct Studentas {
+    string vard;
+    string pav;
+    vector<int> paz;
+    int egzas;
+    float Vidurkiorez;
+    float Medianosrez;
+};
+
+Studentas ivesk();
+double median(vector<int> v);
+
+int main (){
+    vector<Studentas> Grupe;
+    char pasirinkimas;
+    for (int j=0;j<3;j++){
+        cout<<"Iveskite "<<j+1<<" studenta\n";
+        Grupe.push_back(ivesk());
+    }
+    cout << "Pasirinkite koki galutini pazymi rodyti:\na - tik vidurki\nb - tik mediana\nc - vidurki ir mediana\n"; cin >> pasirinkimas;
+
+    if(pasirinkimas=='a'){
+        cout<<setw(15)<<left<<"Pavarde"<<setw(15)<<left<<"Vardas"<<setw(15)<<left<<"Galutinis (Vid.)"<<endl;
+        cout<<"------------------------------------------------------"<<endl;
+        for (auto temp :Grupe){
+        cout<<setw(15)<<left<<temp.pav<<setw(15)<<left<<temp.vard<<setw(15)<<left<<std::fixed<<std::setprecision(2)<<temp.Vidurkiorez<<endl;
+        }
+    }
+    else if(pasirinkimas=='b'){
+        cout<<setw(15)<<left<<"Pavarde"<<setw(15)<<left<<"Vardas"<<setw(15)<<left<<"Galutinis (Med.)"<<endl;
+        cout<<"------------------------------------------------------------"<<endl;
+        for (auto temp :Grupe){
+            cout<<setw(15)<<left<<temp.pav<<setw(15)<<left<<temp.vard<<setw(15)<<left<<std::fixed<<std::setprecision(2)<<temp.Medianosrez<<endl;
+        }
+    }
+    else if(pasirinkimas=='c'){
+        cout<<setw(15)<<left<<"Pavarde"<<setw(15)<<left<<"Vardas"<<setw(20)<<left<<"Galutinis (Vid.) / "<<setw(20)<<left<<"Galutinis (Med.)"<<endl;
+        cout<<"--------------------------------------------------------------------------------"<<endl;
+        for (auto temp :Grupe){
+            cout<<setw(15)<<left<<temp.pav<<setw(15)<<left<<temp.vard<<setw(20)<<left<<std::fixed<<std::setprecision(2)<<temp.Vidurkiorez<<setw(20)<<left<<std::fixed<<std::setprecision(2)<<temp.Medianosrez<<endl;
+        }
+    }
+}
+
+Studentas ivesk(){
+    Studentas Laik;
+    int sum=0, n, m;
+    cout<<"Iveskite Pavarde: "; cin>>Laik.pav;
+    cout<<"Iveskite varda: "; cin>>Laik.vard;
+    cout<<"Iveskite pazymiu skaiciu: "; cin>>n;
+    for (int i=0; i<n; i++){
+        cout<<"Iveskite "<<i+1<<" paz. is "<<n<<" : "; cin>>m;
+        Laik.paz.push_back(m);
+        sum+=m;
+    }
+    cout<<"Iveskite egzamina: "; cin>>Laik.egzas;
+    Laik.Vidurkiorez=Laik.egzas*0.6+double(sum)/double(Laik.paz.size())*0.4;
+    Laik.Medianosrez=Laik.egzas*0.6+median(Laik.paz)*0.4;
+    return Laik;
+}
+
+double median(vector<int> v){
+sort(v.begin(), v.end());
+if(v.size()%2==0)
+    return (v[v.size()/2-1]+v[v.size()/2])/2;
+else
+    return v[v.size()/2];
+}
