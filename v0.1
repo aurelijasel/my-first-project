@@ -59,14 +59,19 @@ int main (){
 
 Studentas ivesk(){
     Studentas Laik;
-    int sum=0, n, m;
+    int sum=0, m;
     cout<<"Iveskite Pavarde: "; cin>>Laik.pav;
     cout<<"Iveskite varda: "; cin>>Laik.vard;
-    cout<<"Iveskite pazymiu skaiciu: "; cin>>n;
-    for (int i=0; i<n; i++){
-        cout<<"Iveskite "<<i+1<<" paz. is "<<n<<" : "; cin>>m;
+    while(true){
+        cout<<"Iveskite pazymi: "; cin>>m;
         Laik.paz.push_back(m);
-        sum+=m;
+        sum += m;
+        while(true){
+            cout<<"Ar norite ivesti dar viena pazymi? (taip/ne): ";  cin>>ats;
+            if(ats == "taip" || ats == "ne") break;
+            else cout<<"Ivesta neteisingai. Bandykite dar karta."<<endl;
+        }
+    if(ats == "ne") break;
     }
     cout<<"Iveskite egzamina: "; cin>>Laik.egzas;
     Laik.Vidurkiorez=Laik.egzas*0.6+double(sum)/double(Laik.paz.size())*0.4;
