@@ -3,6 +3,8 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <cstdlib>
+#include <ctime>
 
 using std::cout;
 using std::cin;
@@ -22,15 +24,31 @@ struct Studentas {
     float Medianosrez;
 };
 
-Studentas ivesk();
+Studentas ivesk(string vard, string pav);
 double median(vector<int> v);
+Studentas generuoti(string vard, string pav, int ndskaicius);
 
 int main (){
+    srand(time(0));
     vector<Studentas> Grupe;
     char pasirinkimas;
-    for (int j=0;j<3;j++){
-        cout<<"Iveskite "<<j+1<<" studenta\n";
-        Grupe.push_back(ivesk());
+    string pasirinkimas2;
+    for (int j=0; j<3; j++){
+        cout << "Iveskite " << j+1 << " studenta\n";
+        string vard, pav;
+        cout << "Iveskite pavarde: "; cin >> pav;
+        cout << "Iveskite varda: "; cin >> vard;
+        while(true){
+            cout << "Ar norite balus ivesti rankiniu budu ar generuoti atsitiktinai? (ranka/generuoti): "; cin >> pasirinkimas2;
+            if(pasirinkimas2 == "ranka" || pasirinkimas2 == "generuoti") break;
+            else cout << "Ivesta neteisingai. Bandykite dar karta." << endl;
+        }
+        if(pasirinkimas2 == "ranka") Grupe.push_back(ivesk(vard, pav));
+        else {
+            int ndskaicius;
+            cout << "Kiek namu darbu sugeneruoti? "; cin >> ndskaicius;
+            Grupe.push_back(generuoti(vard, pav, ndskaicius));
+        }
     }
     cout << "Pasirinkite koki galutini pazymi rodyti:\na - tik vidurki\nb - tik mediana\nc - vidurki ir mediana\n"; cin >> pasirinkimas;
 
@@ -59,9 +77,10 @@ int main (){
 
 Studentas ivesk(){
     Studentas Laik;
+    Laik.vard = vard;
+    Laik.pav = pav;
     int sum=0, m;
-    cout<<"Iveskite Pavarde: "; cin>>Laik.pav;
-    cout<<"Iveskite varda: "; cin>>Laik.vard;
+    string ats;
     while(true){
         cout<<"Iveskite pazymi: "; cin>>m;
         Laik.paz.push_back(m);
@@ -85,4 +104,20 @@ if(v.size()%2==0)
     return (v[v.size()/2-1]+v[v.size()/2])/2;
 else
     return v[v.size()/2];
+}
+
+Studentas generuoti(string vard, string pav, int ndskaicius){
+    Studentas Laik;
+    Laik.vard = vard;
+    Laik.pav = pav;
+    int sum = 0;
+    for(int i = 0; i < ndskaicius; i++){
+        int pazymys = rand() % 10 + 1;
+        Laik.paz.push_back(pazymys);
+        sum += pazymys;
+    }
+    Laik.egzas = rand() % 10 + 1;
+    Laik.Vidurkiorez = Laik.egzas*0.6 + double(sum)/double(Laik.paz.size())*0.4;
+    Laik.Medianosrez = Laik.egzas*0.6 + median(Laik.paz)*0.4;
+    return Laik;
 }
