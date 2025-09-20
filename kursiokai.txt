@@ -1,0 +1,6 @@
+Pavardė Vardas ND1 ND2 ND3 ND4 ND5 Egzaminas
+Onaitiene Ona 10 10 9 9 8 10
+Antanaitis Antanas 5 9 7 6 10 10
+Marijonaitis Marijonas 4 6 7 6 5 7
+Petras Petraitis 8 8 9 8 7 8
+Eleniene Elena 4 9 10 8 9 7
