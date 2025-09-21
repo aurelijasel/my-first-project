@@ -70,6 +70,7 @@ int main() {
             }
         }
     }
+    std::sort(Grupe.begin(), Grupe.end(), [](const Studentas& a, const Studentas& b) {return a.pav<b.pav;});
     while (true) {
         cout<<"Pasirinkite koki galutini pazymi rodyti:\na - tik vidurki\nb - tik mediana\nc - vidurki ir mediana\n"; cin>>pasirinkimas;
         if (pasirinkimas == 'a' || pasirinkimas == 'b' || pasirinkimas == 'c') break;
