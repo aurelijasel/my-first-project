@@ -37,21 +37,30 @@ int main() {
     char pasirinkimas;
     string pasirinkimas2;
     while (true) {
-        cout << "Ar norite duomenis ivesti ranka, generuoti ar nuskaityti is failo? (ranka/generuoti/failas): "; cin >> pasirinkimas2;
+        cout<<"Ar norite duomenis ivesti ranka, generuoti ar nuskaityti is failo? (ranka/generuoti/failas): "; cin>>pasirinkimas2;
         if (pasirinkimas2 == "ranka" || pasirinkimas2 == "generuoti" || pasirinkimas2 == "failas") break;
-        else cout << "Ivesta neteisingai. Bandykite dar karta." << endl;
+        else cout<<"Ivesta neteisingai. Bandykite dar karta."<<endl;
     }
     if (pasirinkimas2 == "failas") {
-        Grupe = nuskaityti("kursiokai.txt");
+        Grupe = nuskaityti("studentai10000.txt");
     }
     else {
         int kiekis;
-        cout << "Kiek studentu norite prideti? "; cin >> kiekis;
-        for (int j = 0; j < kiekis; j++) {
+        while (true) {
+            cout<<"Kiek studentu norite prideti? "; cin>>kiekis;
+            if (!cin || kiekis <= 0) {
+                cout<<"Ivesta neteisingai. Bandykite dar karta."<<endl;
+                cin.clear();
+                cin.ignore(1000, '\n');
+                continue;
+            }
+            break;
+        }
+        for (int j=0; j<kiekis; j++) {
             string vard, pav;
-            cout << "Iveskite " << j + 1 << " studenta" << endl;
-            cout << "Iveskite pavarde: "; cin >> pav;
-            cout << "Iveskite varda: "; cin >> vard;
+            cout<<"Iveskite "<<j+1<<" studenta"<<endl;
+            cout<<"Iveskite pavarde: "; cin>>pav;
+            cout<<"Iveskite varda: "; cin>>vard;
             if (pasirinkimas2 == "ranka") {
                 Grupe.push_back(ivesk(vard, pav));
             }
@@ -62,29 +71,29 @@ int main() {
         }
     }
     while (true) {
-        cout << "Pasirinkite koki galutini pazymi rodyti:\na - tik vidurki\nb - tik mediana\nc - vidurki ir mediana\n"; cin >> pasirinkimas;
+        cout<<"Pasirinkite koki galutini pazymi rodyti:\na - tik vidurki\nb - tik mediana\nc - vidurki ir mediana\n"; cin>>pasirinkimas;
         if (pasirinkimas == 'a' || pasirinkimas == 'b' || pasirinkimas == 'c') break;
-        else cout << "Ivesta neteisingai. Bandykite dar karta." << endl;
+        else cout<<"Ivesta neteisingai. Bandykite dar karta."<<endl;
     }
     if (pasirinkimas == 'a') {
-        cout << setw(15) << left << "Pavarde" << setw(15) << left << "Vardas" << setw(15) << left << "Galutinis (Vid.)" << endl;
-        cout << "------------------------------------------------------" << endl;
+        cout<<setw(15)<<left<<"Pavarde"<<setw(15)<<left<<"Vardas"<<setw(15)<<left<<"Galutinis (Vid.)"<<endl;
+        cout<<"------------------------------------------------------"<<endl;
         for (auto temp : Grupe) {
-            cout << setw(15) << left << temp.pav << setw(15) << left << temp.vard << setw(15) << left << std::fixed << std::setprecision(2) << temp.Vidurkiorez << endl;
+            cout<<setw(15)<<left<<temp.pav<<setw(15)<<left<<temp.vard<<setw(15)<<left<<std::fixed<<std::setprecision(2)<<temp.Vidurkiorez<<endl;
         }
     }
     else if (pasirinkimas == 'b') {
-        cout << setw(15) << left << "Pavarde" << setw(15) << left << "Vardas" << setw(15) << left << "Galutinis (Med.)" << endl;
-        cout << "------------------------------------------------------------" << endl;
+        cout<<setw(15)<<left<<"Pavarde"<<setw(15)<<left<<"Vardas"<<setw(15)<<left<<"Galutinis (Med.)"<<endl;
+        cout<<"------------------------------------------------------------"<<endl;
         for (auto temp : Grupe) {
-            cout << setw(15) << left << temp.pav << setw(15) << left << temp.vard << setw(15) << left << std::fixed << std::setprecision(2) << temp.Medianosrez << endl;
+            cout<<setw(15)<<left<<temp.pav<<setw(15)<<left<<temp.vard<<setw(15)<<left<<std::fixed<<std::setprecision(2)<<temp.Medianosrez<<endl;
         }
     }
     else if (pasirinkimas == 'c') {
-        cout << setw(15) << left << "Pavarde" << setw(15) << left << "Vardas" << setw(20) << left << "Galutinis (Vid.) / " << setw(15) << left << "Galutinis (Med.)" << endl;
-        cout << "--------------------------------------------------------------------------------" << endl;
+        cout<<setw(15)<<left<<"Pavarde"<<setw(15)<<left<<"Vardas"<<setw(20)<<left<<"Galutinis (Vid.) / "<<setw(15)<<left<<"Galutinis (Med.)"<<endl;
+        cout<<"--------------------------------------------------------------------------------"<<endl;
         for (auto temp : Grupe) {
-            cout << setw(15) << left << temp.pav << setw(15) << left << temp.vard << setw(20) << left << std::fixed << std::setprecision(2) << temp.Vidurkiorez << setw(15) << left << std::fixed << std::setprecision(2) << temp.Medianosrez << endl;
+            cout<<setw(15)<<left<<temp.pav<<setw(15)<<left<<temp.vard<<setw(20)<<left<<std::fixed<<std::setprecision(2)<<temp.Vidurkiorez<<setw(15)<<left<<std::fixed<<std::setprecision(2)<<temp.Medianosrez<<endl;
         }
     }
 }
@@ -96,33 +105,51 @@ Studentas ivesk(string vard, string pav) {
     int sum = 0, m;
     string ats;
     while (true) {
-        cout << "Iveskite pazymi: "; cin >> m;
+        while (true) {
+            cout<<"Iveskite pazymi: "; cin>>m;
+            if (!cin || m<1 || m>10) {
+                cout<<"Ivesta neteisingai. Bandykite dar karta."<<endl;
+                cin.clear();
+                cin.ignore(1000, '\n');
+                continue;
+            }
+            break;
+        }
         Laik.paz.push_back(m);
         sum += m;
         while (true) {
-            cout << "Ar norite ivesti dar viena pazymi? (taip/ne): ";  cin >> ats;
+            cout<<"Ar norite ivesti dar viena pazymi? (taip/ne): "; cin>>ats;
             if (ats == "taip" || ats == "ne") break;
-            else cout << "Ivesta neteisingai. Bandykite dar karta." << endl;
+            else cout<<"Ivesta neteisingai. Bandykite dar karta."<<endl;
         }
         if (ats == "ne") break;
     }
-    cout << "Iveskite egzamina: "; cin >> Laik.egzas;
+    while (true) {
+        cout<<"Iveskite egzamina: "; cin>>Laik.egzas;
+        if (!cin || Laik.egzas<1 || Laik.egzas>10) {
+            cout<<"Ivesta neteisingai. Bandykite dar karta."<<endl;
+            cin.clear();
+            cin.ignore(1000, '\n');
+            continue;
+        }
+        break;
+    }
     if (Laik.paz.empty()) {
         Laik.Vidurkiorez = Laik.Medianosrez = 0;
     }
     else {
-        Laik.Vidurkiorez = Laik.egzas * 0.6 + double(sum) / double(Laik.paz.size()) * 0.4;
-        Laik.Medianosrez = Laik.egzas * 0.6 + median(Laik.paz) * 0.4;
+        Laik.Vidurkiorez = Laik.egzas*0.6+double(sum)/double(Laik.paz.size())*0.4;
+        Laik.Medianosrez = Laik.egzas*0.6+median(Laik.paz)*0.4;
     }
     return Laik;
 }
 
 double median(vector<int> v) {
     sort(v.begin(), v.end());
-    if (v.size() % 2 == 0)
-        return ((v[v.size() / 2 - 1] + v[v.size() / 2]) / 2.0);
+    if (v.size()%2 == 0)
+        return ((v[v.size()/2-1]+v[v.size()/2])/2.0);
     else
-        return v[v.size() / 2];
+        return v[v.size()/2];
 }
 
 Studentas generuoti(string vard, string pav, int ndskaicius) {
@@ -130,14 +157,14 @@ Studentas generuoti(string vard, string pav, int ndskaicius) {
     Laik.vard = vard;
     Laik.pav = pav;
     int sum = 0;
-    for (int i = 0; i < ndskaicius; i++) {
-        int pazymys = rand() % 10 + 1;
+    for (int i=0; i<ndskaicius; i++) {
+        int pazymys = rand()%10+1;
         Laik.paz.push_back(pazymys);
         sum += pazymys;
     }
-    Laik.egzas = rand() % 10 + 1;
-    Laik.Vidurkiorez = Laik.egzas * 0.6 + double(sum) / double(Laik.paz.size()) * 0.4;
-    Laik.Medianosrez = Laik.egzas * 0.6 + median(Laik.paz) * 0.4;
+    Laik.egzas = rand()%10+1;
+    Laik.Vidurkiorez = Laik.egzas*0.6+double(sum)/double(Laik.paz.size())*0.4;
+    Laik.Medianosrez = Laik.egzas*0.6+median(Laik.paz)*0.4;
     return Laik;
 }
 
@@ -145,28 +172,30 @@ vector<Studentas> nuskaityti(string failas) {
     vector<Studentas> Grupe;
     std::ifstream fd(failas);
     if (!fd) {
-        cout << "Nepavyko atidaryti failo: " << failas << endl;
+        cout<<"Nepavyko atidaryti failo";
         return Grupe;
     }
-    string pav, vard;
-    int nd, egzas;
-    fd.ignore(1000, '\n');
-    while (fd >> pav >> vard) {
-        Studentas s;
-        s.pav = pav;
-        s.vard = vard;
-        int sum = 0;
-        s.paz.clear();
-        for (int i = 0; i < 5; i++) {
-            fd >> nd;
-            s.paz.push_back(nd);
-            sum += nd;
+    string antraste;
+    getline(fd, antraste);
+    Studentas Laik;
+    while (fd>>Laik.vard>>Laik.pav) {
+        Laik.paz.clear();
+        int pazymys;
+        vector<int> laikini;
+        while (fd.peek() != '\n' && fd>>pazymys) {
+            laikini.push_back(pazymys);
         }
-        fd >> egzas;
-        s.egzas = egzas;
-        s.Vidurkiorez = egzas * 0.6 + double(sum) / s.paz.size() * 0.4;
-        s.Medianosrez = egzas * 0.6 + median(s.paz) * 0.4;
-        Grupe.push_back(s);
+        if (laikini.empty()) continue;
+        Laik.egzas = laikini.back();
+        laikini.pop_back();
+        int sum = 0;
+        for (int x: laikini) {
+            Laik.paz.push_back(x);
+            sum += x;
+        }
+        Laik.Vidurkiorez = Laik.egzas*0.6+double(sum)/Laik.paz.size()*0.4;
+        Laik.Medianosrez = Laik.egzas*0.6+median(Laik.paz)*0.4;
+        Grupe.push_back(Laik);
     }
     return Grupe;
 }
