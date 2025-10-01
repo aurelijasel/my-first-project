@@ -1,6 +1,7 @@
 #include "studentas.h"
 #include "pagalbinesfunkcijos.h"
 #include "duomenuoperacijos.h"
+#include "laikas.h"
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -87,6 +88,7 @@ int main() {
         if (pasirinkimas == 'a' || pasirinkimas == 'b' || pasirinkimas == 'c') break;
         else cout << "Ivesta neteisingai. Bandykite dar karta." << endl;
     }
+    Laikmatis laikmatis_rezultatu_rasymo;
     if (pasirinkimas == 'a') {
         fout << setw(15) << left << "Pavarde" << setw(15) << left << "Vardas" << setw(15) << left << "Galutinis (Vid.)" << endl;
         fout << "------------------------------------------------------" << endl;
@@ -108,5 +110,6 @@ int main() {
             fout << setw(15) << left << temp.pav << setw(15) << left << temp.vard << setw(20) << left << std::fixed << std::setprecision(2) << temp.Vidurkiorez << setw(15) << left << std::fixed << std::setprecision(2) << temp.Medianosrez << endl;
         }
     }
+    cout << "Irasymas i rezultatu faila truko: " << laikmatis_rezultatu_rasymo.elapsed() << " s" << endl;
     suskirstyti(Grupe);
 }
