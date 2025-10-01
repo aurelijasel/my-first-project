@@ -1,6 +1,7 @@
 #include "studentas.h"
 #include "pagalbinesfunkcijos.h"
 #include "duomenuoperacijos.h"
+#include "laikas.h"
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -24,9 +25,11 @@ int main() {
         {"studentai1000000.txt", 1000000},
         {"studentai10000000.txt", 10000000}
     };
+    Laikmatis laikmatis_generavimo;
     for (auto& f : failai) {
         generuotitxt(f.first, f.second);
     }
+    cout << "Failu generavimas uztruko: " << laikmatis_generavimo.elapsed() << " s" << endl;
     std::vector<Studentas> Grupe;
     char pasirinkimas;
     std::string pasirinkimas2;
@@ -52,7 +55,9 @@ int main() {
             fd.close();
             break;
         }
+        Laikmatis laikmatis_nuskaitymo;
         Grupe = nuskaityti(failopavadinimas);
+        cout << "Failo nuskaitymas uztruko: " << laikmatis_nuskaitymo.elapsed() << " s" << endl;
     }
     else {
         int kiekis;
