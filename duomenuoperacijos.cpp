@@ -5,9 +5,11 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+#include <iomanip>
 
 using std::cout;
 using std::endl;
+using std::cin;
 
 std::vector<Studentas> nuskaityti(std::string failas) {
     Laikmatis laikmatis_nuskaitymo;
@@ -75,8 +77,7 @@ void generuotitxt(const std::string& pavadinimas, int kiekis) {
 void suskirstyti(const std::vector<Studentas>& Grupe) {
     char pasirinkimas;
     while (true) {
-        cout << "Pasirinkite pagal ka suskirstyti studentus:\n a - pagal vidurki\n b - pagal mediana\n";
-        std::cin >> pasirinkimas;
+        cout << "Pasirinkite pagal ka suskirstyti studentus:\n a - pagal vidurki\n b - pagal mediana\n"; cin >> pasirinkimas;
         if (pasirinkimas == 'a' || pasirinkimas == 'b') break;
         else cout << "Ivesta neteisingai. Bandykite dar karta." << endl;
     }
@@ -84,11 +85,35 @@ void suskirstyti(const std::vector<Studentas>& Grupe) {
     std::vector<Studentas> vargsiukai;
     std::vector<Studentas> galvociai;
     for (auto& s : Grupe) {
-        double galutinis = (pasirinkimas == 'a') ? s.Vidurkiorez : s.Medianosrez;
-        if (galutinis < 5.0) vargsiukai.push_back(s); // PRIDĖTA
-        else galvociai.push_back(s); // PRIDĖTA
+        double galutinisRez = 0.0;
+        if (pasirinkimas == 'a') {
+            galutinisRez = s.Vidurkiorez;
+        }
+        else {
+            galutinisRez = s.Medianosrez;
+        }
+        if (galutinisRez < 5.0) {
+            vargsiukai.push_back(s);
+        }
+        else {
+            galvociai.push_back(s);
+        }
     }
     cout << "Studentu rusiavimas i dvi grupes uztruko: " << laikmatis_rusiavimo.elapsed() << " s" << endl;
+    auto rikiavimas = [&](const Studentas& a, const Studentas& b) {
+        double galutinisA, galutinisB;
+        if (pasirinkimas == 'a') {
+            galutinisA = a.Vidurkiorez;
+            galutinisB = b.Vidurkiorez;
+        }
+        else {
+            galutinisA = a.Medianosrez;
+            galutinisB = b.Medianosrez;
+        }
+        return galutinisA < galutinisB;
+        };
+    std::sort(vargsiukai.begin(), vargsiukai.end(), rikiavimas);
+    std::sort(galvociai.begin(), galvociai.end(), rikiavimas);
     Laikmatis laikmatis_failu_rasymo;
     std::ofstream foutvargsiukai("vargsiukai.txt");
     std::ofstream foutgalvociai("galvociai.txt");
@@ -96,10 +121,32 @@ void suskirstyti(const std::vector<Studentas>& Grupe) {
         cout << "Nepavyko sukurti failu vargsiukams arba galvociams" << endl;
         return;
     }
-    for (auto& s : vargsiukai) foutvargsiukai << s.pav << " " << s.vard << endl;
-    for (auto& s : galvociai) foutgalvociai << s.pav << " " << s.vard << endl;
+    for (auto& s : vargsiukai) {
+        if (pasirinkimas == 'a') {
+            double galutinisVid = s.Vidurkiorez;
+            foutvargsiukai << s.pav << " " << s.vard
+                << " Galutinis (Vid.): " << std::fixed << std::setprecision(2) << galutinisVid << "\n";
+        }
+        else {
+            double galutinisMed = s.Medianosrez;
+            foutvargsiukai << s.pav << " " << s.vard
+                << " Galutinis (Med.): " << std::fixed << std::setprecision(2) << galutinisMed << "\n";
+        }
+    }
+    for (auto& s : galvociai) {
+        if (pasirinkimas == 'a') {
+            double galutinisVid = s.Vidurkiorez;
+            foutgalvociai << s.pav << " " << s.vard
+                << " Galutinis (Vid.): " << std::fixed << std::setprecision(2) << galutinisVid << "\n";
+        }
+        else {
+            double galutinisMed = s.Medianosrez;
+            foutgalvociai << s.pav << " " << s.vard
+                << " Galutinis (Med.): " << std::fixed << std::setprecision(2) << galutinisMed << "\n";
+        }
+    }
     foutvargsiukai.close();
     foutgalvociai.close();
-    cout << "Studentu isvedimas i failus uztruko: " << laikmatis_failu_rasymo.elapsed() << " s" << endl;
+    cout << "Studentu isvedimas i suskirstymo failus uztruko: " << laikmatis_failu_rasymo.elapsed() << " s" << endl;
     cout << "Sukurti 'vargsiukai.txt' ir 'galvociai.txt'" << endl;
 }
