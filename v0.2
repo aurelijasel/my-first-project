@@ -113,5 +113,7 @@ int main() {
             fout << setw(15) << left << temp.pav << setw(15) << left << temp.vard << setw(20) << left << std::fixed << std::setprecision(2) << temp.Vidurkiorez << setw(15) << left << std::fixed << std::setprecision(2) << temp.Medianosrez << endl;
         }
     }
+    Laikmatis laikmatis_suskirstymo;
     suskirstyti(Grupe);
+    cout << "Studentu suskirstymas i dvi grupes uztruko: " << laikmatis_suskirstymo.elapsed() << " s" << endl;
 }
