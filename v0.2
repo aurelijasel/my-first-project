@@ -33,6 +33,7 @@ Studentas generuoti(string vard, string pav, int ndskaicius);
 vector<Studentas> nuskaityti(string failas);
 Studentas generuotistudenta(int id, int ndskaicius = 5);
 void generuotitxt(const string& pavadinimas, int kiekis);
+void suskirstyti(const vector<Studentas>& Grupe);
 
 int main() {
     srand(time(0));
@@ -60,7 +61,18 @@ int main() {
         else cout << "Ivesta neteisingai. Bandykite dar karta." << endl;
     }
     if (pasirinkimas2 == "failas") {
-        Grupe = nuskaityti("studentai1000000.txt");
+        string failopavadinimas;
+        while (true) {
+            cout << "Iveskite failo pavadinima: "; cin >> failopavadinimas;
+            std::ifstream fd(failopavadinimas);
+            if (!fd) {
+                cout << "Nepavyko atidaryti failo. Bandykite dar karta." << endl;
+                continue;
+            }
+            fd.close();
+            break;
+        }
+        Grupe = nuskaityti(failopavadinimas);
     }
     else {
         int kiekis;
@@ -116,6 +128,7 @@ int main() {
             fout << setw(15) << left << temp.pav << setw(15) << left << temp.vard << setw(20) << left << std::fixed << std::setprecision(2) << temp.Vidurkiorez << setw(15) << left << std::fixed << std::setprecision(2) << temp.Medianosrez << endl;
         }
     }
+    suskirstyti(Grupe);
 }
 
 Studentas ivesk(string vard, string pav) {
@@ -259,4 +272,37 @@ void generuotitxt(const string& pavadinimas, int kiekis) {
     }
     fout.close();
     cout << "Failas " << pavadinimas << " sukurtas" << endl;
+}
+
+void suskirstyti(const vector<Studentas>& Grupe) {
+    char pasirinkimas;
+    while (true) {
+        cout << "Pasirinkite pagal ka suskirstyti studentus:\n a - pagal vidurki\n b - pagal mediana\n"; cin >> pasirinkimas;
+        if (pasirinkimas == 'a' || pasirinkimas == 'b') break;
+        else cout << "Ivesta neteisingai. Bandykite dar karta." << endl;
+    }
+    std::ofstream foutvargsiukai("vargsiukai.txt");
+    std::ofstream foutgalvociai("galvociai.txt");
+    if (!foutvargsiukai || !foutgalvociai) {
+        cout << "Nepavyko sukurti failu vargsiukams arba galvociams" << endl;
+        return;
+    }
+    for (auto& s : Grupe) {
+        double galutinis;
+        if (pasirinkimas == 'a') {
+            galutinis = s.Vidurkiorez;
+        }
+        else {
+            galutinis = s.Medianosrez;
+        }
+        if (galutinis < 5.0) {
+            foutvargsiukai << s.pav << " " << s.vard << endl;
+        }
+        else {
+            foutgalvociai << s.pav << " " << s.vard << endl;
+        }
+    }
+    foutvargsiukai.close();
+    foutgalvociai.close();
+    cout << "Sukurti 'vargsiukai.txt' ir 'galvociai.txt'" << endl;
 }
