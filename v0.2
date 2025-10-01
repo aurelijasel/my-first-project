@@ -1,43 +1,23 @@
+#include "studentas.h"
+#include "pagalbinesfunkcijos.h"
+#include "duomenuoperacijos.h"
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 #include <vector>
 #include <string>
 #include <algorithm>
-#include <fstream>
-#include <sstream> 
-#include <cstdlib>
-#include <ctime>
 #include <utility>
 
 using std::cout;
 using std::cin;
 using std::endl;
-using std::string;
-using std::vector;
 using std::setw;
 using std::left;
-using std::right;
-
-struct Studentas {
-    string vard;
-    string pav;
-    vector<int> paz;
-    int egzas;
-    float Vidurkiorez;
-    float Medianosrez;
-};
-
-Studentas ivesk(string vard, string pav);
-double median(vector<int> v);
-Studentas generuoti(string vard, string pav, int ndskaicius);
-vector<Studentas> nuskaityti(string failas);
-Studentas generuotistudenta(int id, int ndskaicius = 5);
-void generuotitxt(const string& pavadinimas, int kiekis);
-void suskirstyti(const vector<Studentas>& Grupe);
 
 int main() {
     srand(time(0));
-    vector<std::pair<string, int>> failai = {
+    std::vector<std::pair<std::string, int>> failai = {
         {"studentai1000.txt", 1000},
         {"studentai10000.txt", 10000},
         {"studentai100000.txt", 100000},
@@ -47,9 +27,9 @@ int main() {
     for (auto& f : failai) {
         generuotitxt(f.first, f.second);
     }
-    vector<Studentas> Grupe;
+    std::vector<Studentas> Grupe;
     char pasirinkimas;
-    string pasirinkimas2;
+    std::string pasirinkimas2;
     std::ofstream fout("rezultatai.txt");
     if (!fout) {
         cout << "Nepavyko sukurti rezultatu failo" << endl;
@@ -61,7 +41,7 @@ int main() {
         else cout << "Ivesta neteisingai. Bandykite dar karta." << endl;
     }
     if (pasirinkimas2 == "failas") {
-        string failopavadinimas;
+        std::string failopavadinimas;
         while (true) {
             cout << "Iveskite failo pavadinima: "; cin >> failopavadinimas;
             std::ifstream fd(failopavadinimas);
@@ -88,7 +68,7 @@ int main() {
             break;
         }
         for (int j = 0; j < kiekis; j++) {
-            string vard, pav;
+            std::string vard, pav;
             cout << "Iveskite " << j + 1 << " studenta" << endl;
             cout << "Iveskite pavarde: "; cin >> pav;
             cout << "Iveskite varda: "; cin >> vard;
@@ -129,180 +109,4 @@ int main() {
         }
     }
     suskirstyti(Grupe);
-}
-
-Studentas ivesk(string vard, string pav) {
-    Studentas Laik;
-    Laik.vard = vard;
-    Laik.pav = pav;
-    int sum = 0, m;
-    string ats;
-    while (true) {
-        while (true) {
-            cout << "Iveskite pazymi: "; cin >> m;
-            if (!cin || m < 1 || m>10) {
-                cout << "Ivesta neteisingai. Bandykite dar karta." << endl;
-                cin.clear();
-                cin.ignore(1000, '\n');
-                continue;
-            }
-            break;
-        }
-        Laik.paz.push_back(m);
-        sum += m;
-        while (true) {
-            cout << "Ar norite ivesti dar viena pazymi? (taip/ne): "; cin >> ats;
-            if (ats == "taip" || ats == "ne") break;
-            else cout << "Ivesta neteisingai. Bandykite dar karta." << endl;
-        }
-        if (ats == "ne") break;
-    }
-    while (true) {
-        cout << "Iveskite egzamina: "; cin >> Laik.egzas;
-        if (!cin || Laik.egzas < 1 || Laik.egzas>10) {
-            cout << "Ivesta neteisingai. Bandykite dar karta." << endl;
-            cin.clear();
-            cin.ignore(1000, '\n');
-            continue;
-        }
-        break;
-    }
-    if (Laik.paz.empty()) {
-        Laik.Vidurkiorez = Laik.Medianosrez = 0;
-    }
-    else {
-        Laik.Vidurkiorez = Laik.egzas * 0.6 + double(sum) / double(Laik.paz.size()) * 0.4;
-        Laik.Medianosrez = Laik.egzas * 0.6 + median(Laik.paz) * 0.4;
-    }
-    return Laik;
-}
-
-double median(vector<int> v) {
-    sort(v.begin(), v.end());
-    if (v.size() % 2 == 0)
-        return ((v[v.size() / 2 - 1] + v[v.size() / 2]) / 2.0);
-    else
-        return v[v.size() / 2];
-}
-
-Studentas generuoti(string vard, string pav, int ndskaicius) {
-    Studentas Laik;
-    Laik.vard = vard;
-    Laik.pav = pav;
-    int sum = 0;
-    for (int i = 0; i < ndskaicius; i++) {
-        int pazymys = rand() % 10 + 1;
-        Laik.paz.push_back(pazymys);
-        sum += pazymys;
-    }
-    Laik.egzas = rand() % 10 + 1;
-    Laik.Vidurkiorez = Laik.egzas * 0.6 + double(sum) / double(Laik.paz.size()) * 0.4;
-    Laik.Medianosrez = Laik.egzas * 0.6 + median(Laik.paz) * 0.4;
-    return Laik;
-}
-vector<Studentas> nuskaityti(string failas) {
-    vector<Studentas> Grupe;
-    std::ifstream fd(failas);
-    if (!fd) {
-        cout << "Nepavyko atidaryti failo";
-        return Grupe;
-    }
-    string antraste;
-    getline(fd, antraste);
-    string eilute;
-    while (getline(fd, eilute)) {
-        std::istringstream ss(eilute);
-        Studentas Laik;
-        ss >> Laik.vard >> Laik.pav;
-        Laik.paz.clear();
-        int skaicius;
-        vector<int> laikini;
-        while (ss >> skaicius) {
-            laikini.push_back(skaicius);
-        }
-        if (laikini.empty()) continue;
-        Laik.egzas = laikini.back();
-        laikini.pop_back();
-        int sum = 0;
-        for (int p : laikini) {
-            Laik.paz.push_back(p);
-            sum += p;
-        }
-        if (!Laik.paz.empty()) {
-            Laik.Vidurkiorez = Laik.egzas * 0.6 + double(sum) / Laik.paz.size() * 0.4;
-            Laik.Medianosrez = Laik.egzas * 0.6 + median(Laik.paz) * 0.4;
-        }
-        else {
-            Laik.Vidurkiorez = Laik.Medianosrez = Laik.egzas * 0.6;
-        }
-        Grupe.push_back(Laik);
-    }
-    return Grupe;
-}
-Studentas generuotistudenta(int id, int ndskaicius) {
-    Studentas s;
-    s.vard = "Vardas" + std::to_string(id);
-    s.pav = "Pavarde" + std::to_string(id);
-    int sum = 0;
-    for (int i = 0; i < ndskaicius; i++) {
-        int pazymys = rand() % 10 + 1;
-        s.paz.push_back(pazymys);
-        sum += pazymys;
-    }
-    s.egzas = rand() % 10 + 1;
-    s.Vidurkiorez = s.egzas * 0.6 + (double)sum / s.paz.size() * 0.4;
-    s.Medianosrez = s.egzas * 0.6 + median(s.paz) * 0.4;
-    return s;
-}
-
-void generuotitxt(const string& pavadinimas, int kiekis) {
-    std::ofstream fout(pavadinimas);
-    if (!fout) {
-        cout << "Nepavyko sukurti failo: " << pavadinimas << endl;
-        return;
-    }
-    fout << "Vardas Pavarde ";
-    for (int i = 1; i <= 5; i++) fout << "ND" << i << " ";
-    fout << "Egzaminas\n";
-    for (int i = 1; i <= kiekis; i++) {
-        Studentas s = generuotistudenta(i, 5);
-        fout << s.vard << " " << s.pav << " ";
-        for (int paz : s.paz) fout << paz << " ";
-        fout << s.egzas << "\n";
-    }
-    fout.close();
-    cout << "Failas " << pavadinimas << " sukurtas" << endl;
-}
-
-void suskirstyti(const vector<Studentas>& Grupe) {
-    char pasirinkimas;
-    while (true) {
-        cout << "Pasirinkite pagal ka suskirstyti studentus:\n a - pagal vidurki\n b - pagal mediana\n"; cin >> pasirinkimas;
-        if (pasirinkimas == 'a' || pasirinkimas == 'b') break;
-        else cout << "Ivesta neteisingai. Bandykite dar karta." << endl;
-    }
-    std::ofstream foutvargsiukai("vargsiukai.txt");
-    std::ofstream foutgalvociai("galvociai.txt");
-    if (!foutvargsiukai || !foutgalvociai) {
-        cout << "Nepavyko sukurti failu vargsiukams arba galvociams" << endl;
-        return;
-    }
-    for (auto& s : Grupe) {
-        double galutinis;
-        if (pasirinkimas == 'a') {
-            galutinis = s.Vidurkiorez;
-        }
-        else {
-            galutinis = s.Medianosrez;
-        }
-        if (galutinis < 5.0) {
-            foutvargsiukai << s.pav << " " << s.vard << endl;
-        }
-        else {
-            foutgalvociai << s.pav << " " << s.vard << endl;
-        }
-    }
-    foutvargsiukai.close();
-    foutgalvociai.close();
-    cout << "Sukurti 'vargsiukai.txt' ir 'galvociai.txt'" << endl;
 }
