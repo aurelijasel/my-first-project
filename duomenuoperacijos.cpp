@@ -1,5 +1,6 @@
 #include "duomenuoperacijos.h"
 #include "pagalbinesfunkcijos.h"
+#include "laikas.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -9,6 +10,7 @@ using std::cout;
 using std::endl;
 
 std::vector<Studentas> nuskaityti(std::string failas) {
+    Laikmatis laikmatis_nuskaitymo;
     std::vector<Studentas> Grupe;
     std::ifstream fd(failas);
     if (!fd) {
@@ -45,10 +47,12 @@ std::vector<Studentas> nuskaityti(std::string failas) {
         }
         Grupe.push_back(Laik);
     }
+    cout << "Failo nuskaitymas uztruko: " << laikmatis_nuskaitymo.elapsed() << " s" << endl;
     return Grupe;
 }
 
 void generuotitxt(const std::string& pavadinimas, int kiekis) {
+    Laikmatis laikmatis_generavimo;
     std::ofstream fout(pavadinimas);
     if (!fout) {
         cout << "Nepavyko sukurti failo: " << pavadinimas << endl;
@@ -65,31 +69,37 @@ void generuotitxt(const std::string& pavadinimas, int kiekis) {
     }
     fout.close();
     cout << "Failas " << pavadinimas << " sukurtas" << endl;
+    cout << "Generavimas uztruko: " << laikmatis_generavimo.elapsed() << " s" << endl;
 }
 
 void suskirstyti(const std::vector<Studentas>& Grupe) {
     char pasirinkimas;
     while (true) {
-        cout << "Pasirinkite pagal ka suskirstyti studentus:\n a - pagal vidurki\n b - pagal mediana\n"; std::cin >> pasirinkimas;
+        cout << "Pasirinkite pagal ka suskirstyti studentus:\n a - pagal vidurki\n b - pagal mediana\n";
+        std::cin >> pasirinkimas;
         if (pasirinkimas == 'a' || pasirinkimas == 'b') break;
         else cout << "Ivesta neteisingai. Bandykite dar karta." << endl;
     }
+    Laikmatis laikmatis_rusiavimo;
+    std::vector<Studentas> vargsiukai;
+    std::vector<Studentas> galvociai;
+    for (auto& s : Grupe) {
+        double galutinis = (pasirinkimas == 'a') ? s.Vidurkiorez : s.Medianosrez;
+        if (galutinis < 5.0) vargsiukai.push_back(s); // PRIDĖTA
+        else galvociai.push_back(s); // PRIDĖTA
+    }
+    cout << "Studentu rusiavimas i dvi grupes uztruko: " << laikmatis_rusiavimo.elapsed() << " s" << endl;
+    Laikmatis laikmatis_failu_rasymo;
     std::ofstream foutvargsiukai("vargsiukai.txt");
     std::ofstream foutgalvociai("galvociai.txt");
     if (!foutvargsiukai || !foutgalvociai) {
         cout << "Nepavyko sukurti failu vargsiukams arba galvociams" << endl;
         return;
     }
-    for (auto& s : Grupe) {
-        double galutinis = (pasirinkimas == 'a') ? s.Vidurkiorez : s.Medianosrez;
-        if (galutinis < 5.0) {
-            foutvargsiukai << s.pav << " " << s.vard << endl;
-        }
-        else {
-            foutgalvociai << s.pav << " " << s.vard << endl;
-        }
-    }
+    for (auto& s : vargsiukai) foutvargsiukai << s.pav << " " << s.vard << endl;
+    for (auto& s : galvociai) foutgalvociai << s.pav << " " << s.vard << endl;
     foutvargsiukai.close();
     foutgalvociai.close();
+    cout << "Studentu isvedimas i failus uztruko: " << laikmatis_failu_rasymo.elapsed() << " s" << endl;
     cout << "Sukurti 'vargsiukai.txt' ir 'galvociai.txt'" << endl;
 }
