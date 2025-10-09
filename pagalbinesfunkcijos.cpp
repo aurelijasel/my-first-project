@@ -44,7 +44,7 @@ Studentas ivesk(std::string vard, std::string pav) {
         break;
     }
     if (Laik.paz.empty()) {
-        Laik.Vidurkiorez = Laik.Medianosrez = 0;
+        Laik.Vidurkiorez = Laik.Medianosrez = Laik.egzas * 0.6;
     }
     else {
         Laik.Vidurkiorez = Laik.egzas * 0.6 + double(sum) / double(Laik.paz.size()) * 0.4;
@@ -56,7 +56,7 @@ Studentas ivesk(std::string vard, std::string pav) {
 double median(std::vector<int> v) {
     std::sort(v.begin(), v.end());
     if (v.size() % 2 == 0)
-        return ((v[v.size() / 2 - 1] + v[v.size() / 2]) / 2.0);
+        return ((v[v.size() / 2 - 1] + v[v.size() / 2]) / 2);
     else
         return v[v.size() / 2];
 }
