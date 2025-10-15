@@ -6,6 +6,7 @@ RAM: 16,0 GB (15,9 GB usable)
 
 HDD: 238 GB SSD SAMSUNG MZVLW256HEHP-000L7
 
+
 TESTAVIMO FAILAI
 
 studentai1000.txt
@@ -17,6 +18,7 @@ studentai100000.txt
 studentai1000000.txt
 
 studentai10000000.txt
+
 
 TESTAVIMO REZULTATAI
 
