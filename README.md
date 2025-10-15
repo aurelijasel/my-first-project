@@ -1,10 +1,12 @@
-Testavimo sistema
+TESTAVIMO SISTEMA
 
 CPU: Intel(R) Core(TM) i7-8650U CPU @ 1.90GHz 2.11 GHz
+
 RAM: 16,0 GB (15,9 GB usable)
+
 HDD: 238 GB SSD SAMSUNG MZVLW256HEHP-000L7
 
-Testavimo failai
+TESTAVIMO FAILAI
 
 studentai1000.txt
 
@@ -16,7 +18,7 @@ studentai1000000.txt
 
 studentai10000000.txt
 
-Testavimo rezultatai
+TESTAVIMO REZULTATAI
 
 | Konteineris | Failas                | Nuskaitymas (s) | Rusiavimas (s) | Irasymas (s) | Bendras (s) |
 | ----------- | --------------------- | --------------- | -------------- | ------------ | ----------- |
