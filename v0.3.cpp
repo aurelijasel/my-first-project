@@ -9,6 +9,8 @@
 #include <string>
 #include <algorithm>
 #include <utility>
+#include <list>
+#include <chrono>
 
 using std::cout;
 using std::cin;
@@ -18,17 +20,32 @@ using std::left;
 
 int main() {
     srand(time(0));
+    std::string konteineriotipas;
+    bool naudotivector = true;
+    while (true) {
+        cout << "Pasirinkite konteinerio tipą (vector/list): "; cin >> konteineriotipas;
+        if (konteineriotipas == "vector") {
+            naudotivector = true;
+            break;
+        }
+        else if (konteineriotipas == "list") {
+            naudotivector = false;
+            break;
+        }
+        else cout << "Neteisingas pasirinkimas. Bandykite dar karta.\n";
+    }
     std::vector<std::pair<std::string, int>> failai = {
-        {"studentai1000.txt", 1000},
-        {"studentai10000.txt", 10000},
-        {"studentai100000.txt", 100000},
-        {"studentai1000000.txt", 1000000},
-        {"studentai10000000.txt", 10000000}
+        //{"studentai1000.txt", 1000},
+        //{"studentai10000.txt", 10000},
+        //{"studentai100000.txt", 100000},
+        //{"studentai1000000.txt", 1000000},
+        //{"studentai10000000.txt", 10000000}
     };
     for (auto& f : failai) {
         generuotitxt(f.first, f.second);
     }
-    std::vector<Studentas> Grupe;
+    std::vector<Studentas> GrupeVector;
+    std::list<Studentas> GrupeList;
     char pasirinkimas;
     std::string pasirinkimas2;
     std::ofstream fout("rezultatai.txt");
@@ -53,7 +70,11 @@ int main() {
             fd.close();
             break;
         }
-        Grupe = nuskaityti(failopavadinimas);
+        if (naudotivector) GrupeVector = nuskaityti(failopavadinimas);
+        else {
+            auto laikinas = nuskaityti(failopavadinimas);
+            GrupeList.assign(laikinas.begin(), laikinas.end());
+        }
     }
     else {
         int kiekis;
@@ -74,15 +95,24 @@ int main() {
             cout << "Iveskite pavarde: "; cin >> pav;
             cout << "Iveskite varda: "; cin >> vard;
             if (pasirinkimas2 == "ranka") {
-                Grupe.push_back(ivesk(vard, pav));
+                if (naudotivector) {
+                    GrupeVector.push_back(ivesk(vard, pav));
+                    cout << "Studento objektas saugomas adresu: " << &GrupeVector.back() << endl;
+                }
+                else {
+                    GrupeList.push_back(ivesk(vard, pav));
+                    auto it = GrupeList.end();
+                    --it;
+                    cout << "Studento objektas saugomas adresu: " << &(*it) << endl;
+                }
             }
             else if (pasirinkimas2 == "generuoti") {
                 int ndskaicius = 5;
-                Grupe.push_back(generuoti(vard, pav, ndskaicius));
+                if (naudotivector) GrupeVector.push_back(generuoti(vard, pav, ndskaicius));
+                else GrupeList.push_back(generuoti(vard, pav, ndskaicius));
             }
         }
     }
-    std::sort(Grupe.begin(), Grupe.end(), [](const Studentas& a, const Studentas& b) {return a.pav < b.pav; });
     while (true) {
         cout << "Pasirinkite koki galutini pazymi rodyti:\na - tik vidurki\nb - tik mediana\nc - vidurki ir mediana\n"; cin >> pasirinkimas;
         if (pasirinkimas == 'a' || pasirinkimas == 'b' || pasirinkimas == 'c') break;
@@ -92,24 +122,22 @@ int main() {
     if (pasirinkimas == 'a') {
         fout << setw(15) << left << "Pavarde" << setw(15) << left << "Vardas" << setw(15) << left << "Galutinis (Vid.)" << endl;
         fout << "------------------------------------------------------" << endl;
-        for (auto temp : Grupe) {
-            fout << setw(15) << left << temp.pav << setw(15) << left << temp.vard << setw(15) << left << std::fixed << std::setprecision(2) << temp.Vidurkiorez << endl;
-        }
+        if (naudotivector) for (auto temp : GrupeVector) fout << setw(15) << left << temp.pav << setw(15) << left << temp.vard << setw(15) << left << std::fixed << std::setprecision(2) << temp.Vidurkiorez << endl;
+        else for (auto temp : GrupeList) fout << setw(15) << left << temp.pav << setw(15) << left << temp.vard << setw(15) << left << std::fixed << std::setprecision(2) << temp.Vidurkiorez << endl;
     }
     else if (pasirinkimas == 'b') {
         fout << setw(15) << left << "Pavarde" << setw(15) << left << "Vardas" << setw(15) << left << "Galutinis (Med.)" << endl;
         fout << "------------------------------------------------------------" << endl;
-        for (auto temp : Grupe) {
-            fout << setw(15) << left << temp.pav << setw(15) << left << temp.vard << setw(15) << left << std::fixed << std::setprecision(2) << temp.Medianosrez << endl;
-        }
+        if (naudotivector) for (auto temp : GrupeVector) fout << setw(15) << left << temp.pav << setw(15) << left << temp.vard << setw(15) << left << std::fixed << std::setprecision(2) << temp.Medianosrez << endl;
+        else for (auto temp : GrupeList) fout << setw(15) << left << temp.pav << setw(15) << left << temp.vard << setw(15) << left << std::fixed << std::setprecision(2) << temp.Medianosrez << endl;
     }
     else if (pasirinkimas == 'c') {
         fout << setw(15) << left << "Pavarde" << setw(15) << left << "Vardas" << setw(20) << left << "Galutinis (Vid.) / " << setw(15) << left << "Galutinis (Med.)" << endl;
         fout << "--------------------------------------------------------------------------------" << endl;
-        for (auto temp : Grupe) {
-            fout << setw(15) << left << temp.pav << setw(15) << left << temp.vard << setw(20) << left << std::fixed << std::setprecision(2) << temp.Vidurkiorez << setw(15) << left << std::fixed << std::setprecision(2) << temp.Medianosrez << endl;
-        }
+        if (naudotivector) for (auto temp : GrupeVector) fout << setw(15) << left << temp.pav << setw(15) << left << temp.vard << setw(20) << left << std::fixed << std::setprecision(2) << temp.Vidurkiorez << setw(15) << left << std::fixed << std::setprecision(2) << temp.Medianosrez << endl;
+        else for (auto temp : GrupeList) fout << setw(15) << left << temp.pav << setw(15) << left << temp.vard << setw(20) << left << std::fixed << std::setprecision(2) << temp.Vidurkiorez << setw(15) << left << std::fixed << std::setprecision(2) << temp.Medianosrez << endl;
     }
-    cout << "Irasymas i rezultatu faila truko: " << laikmatis_rezultatu_rasymo.elapsed() << " s" << endl;
-    suskirstyti(Grupe);
+    cout << "Irasymas i rezultatu faila truko: " << std::fixed << std::setprecision(6) << laikmatis_rezultatu_rasymo.elapsed() << " s" << endl;
+    if (naudotivector) suskirstyti(GrupeVector);
+    else suskirstyti(GrupeList);
 }
