@@ -178,3 +178,63 @@ void suskirstyti(const std::list<Studentas>& Grupe) {
     cout << std::fixed << std::setprecision(6) << "Studentu isvedimas i failus uztruko: " << laikmatis_failu_rasymo.elapsed() << " s" << endl;
     cout << "Sukurti failai: 'vargsiukai_list.txt' ir 'galvociai_list.txt'" << endl;
 }
+
+void suskirstyti(std::vector<Studentas>& grupe, char pagalkaskirstyti, char pagalkarikiuoti) {
+    Laikmatis laikmatis_rusiavimo;
+    std::vector<Studentas> vargsiukai, galvociai;
+    for (auto& s : grupe) {
+        double galutinis = (pagalkaskirstyti == 'a') ? s.Vidurkiorez : s.Medianosrez;
+        if (galutinis < 5.0) vargsiukai.push_back(s);
+        else galvociai.push_back(s);
+    }
+    auto rikiavimas = [&](const Studentas& a, const Studentas& b) {
+        if (pagalkarikiuoti == 'a') return a.pav < b.pav;
+        else if (pagalkarikiuoti == 'b') return a.vard < b.vard;
+        else {
+            double galutinisA = (pagalkaskirstyti == 'a') ? a.Vidurkiorez : a.Medianosrez;
+            double galutinisB = (pagalkaskirstyti == 'a') ? b.Vidurkiorez : b.Medianosrez;
+            return galutinisA < galutinisB;
+        }
+    };
+    std::sort(vargsiukai.begin(), vargsiukai.end(), rikiavimas);
+    std::sort(galvociai.begin(), galvociai.end(), rikiavimas);
+    std::ofstream foutv("vargsiukai_vector.txt"), foutg("galvociai_vector.txt");
+    for (auto& s : vargsiukai) {
+        double galutinis = (pagalkaskirstyti == 'a') ? s.Vidurkiorez : s.Medianosrez;
+        foutv << s.pav << " " << s.vard << " Galutinis: " << std::fixed << std::setprecision(2) << galutinis << "\n";
+    }
+    for (auto& s : galvociai) {
+        double galutinis = (pagalkaskirstyti == 'a') ? s.Vidurkiorez : s.Medianosrez;
+        foutg << s.pav << " " << s.vard << " Galutinis: " << std::fixed << std::setprecision(2) << galutinis << "\n";
+    }
+}
+
+void suskirstyti(std::list<Studentas>& grupe, char pagalkaskirstyti, char pagalkarikiuoti) {
+    Laikmatis laikmatis_rusiavimo;
+    std::list<Studentas> vargsiukai, galvociai;
+    for (auto& s : grupe) {
+        double galutinis = (pagalkaskirstyti == 'a') ? s.Vidurkiorez : s.Medianosrez;
+        if (galutinis < 5.0) vargsiukai.push_back(s);
+        else galvociai.push_back(s);
+    }
+    auto rikiavimas = [&](const Studentas& a, const Studentas& b) {
+        if (pagalkarikiuoti == 'a') return a.pav < b.pav;
+        else if (pagalkarikiuoti == 'b') return a.vard < b.vard;
+        else {
+            double galutinisA = (pagalkaskirstyti == 'a') ? a.Vidurkiorez : a.Medianosrez;
+            double galutinisB = (pagalkaskirstyti == 'a') ? b.Vidurkiorez : b.Medianosrez;
+            return galutinisA < galutinisB;
+        }
+    };
+    vargsiukai.sort(rikiavimas);
+    galvociai.sort(rikiavimas);
+    std::ofstream foutv("vargsiukai_list.txt"), foutg("galvociai_list.txt");
+    for (auto& s : vargsiukai) {
+        double galutinis = (pagalkaskirstyti == 'a') ? s.Vidurkiorez : s.Medianosrez;
+        foutv << s.pav << " " << s.vard << " Galutinis: " << std::fixed << std::setprecision(2) << galutinis << "\n";
+    }
+    for (auto& s : galvociai) {
+        double galutinis = (pagalkaskirstyti == 'a') ? s.Vidurkiorez : s.Medianosrez;
+        foutg << s.pav << " " << s.vard << " Galutinis: " << std::fixed << std::setprecision(2) << galutinis << "\n";
+    }
+}
