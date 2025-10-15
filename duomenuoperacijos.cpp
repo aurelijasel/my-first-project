@@ -16,7 +16,7 @@ std::vector<Studentas> nuskaityti(std::string failas) {
     std::vector<Studentas> Grupe;
     std::ifstream fd(failas);
     if (!fd) {
-        cout << "Nepavyko atidaryti failo";
+        cout << "Nepavyko atidaryti failo: " << failas << endl;
         return Grupe;
     }
     std::string antraste;
@@ -49,7 +49,7 @@ std::vector<Studentas> nuskaityti(std::string failas) {
         }
         Grupe.push_back(Laik);
     }
-    cout << "Failo nuskaitymas uztruko: " << laikmatis_nuskaitymo.elapsed() << " s" << endl;
+    cout << std::fixed << std::setprecision(6) << "Failo nuskaitymas uztruko: " << laikmatis_nuskaitymo.elapsed() << " s" << endl;
     return Grupe;
 }
 
@@ -71,13 +71,14 @@ void generuotitxt(const std::string& pavadinimas, int kiekis) {
     }
     fout.close();
     cout << "Failas " << pavadinimas << " sukurtas" << endl;
-    cout << "Generavimas uztruko: " << laikmatis_generavimo.elapsed() << " s" << endl;
+    cout << std::fixed << std::setprecision(6)
+        << "Generavimas uztruko: " << laikmatis_generavimo.elapsed() << " s" << endl;
 }
 
 void suskirstyti(const std::vector<Studentas>& Grupe) {
     char pasirinkimas;
     while (true) {
-        cout << "Pasirinkite pagal ka suskirstyti studentus:\n a - pagal vidurki\n b - pagal mediana\n"; cin >> pasirinkimas;
+        cout << "Pasirinkite pagal ka suskirstyti studentus:\n" << " a - pagal vidurki\n b - pagal mediana\n"; cin >> pasirinkimas;
         if (pasirinkimas == 'a' || pasirinkimas == 'b') break;
         else cout << "Ivesta neteisingai. Bandykite dar karta." << endl;
     }
@@ -85,68 +86,95 @@ void suskirstyti(const std::vector<Studentas>& Grupe) {
     std::vector<Studentas> vargsiukai;
     std::vector<Studentas> galvociai;
     for (auto& s : Grupe) {
-        double galutinisRez = 0.0;
-        if (pasirinkimas == 'a') {
-            galutinisRez = s.Vidurkiorez;
-        }
-        else {
-            galutinisRez = s.Medianosrez;
-        }
-        if (galutinisRez < 5.0) {
-            vargsiukai.push_back(s);
-        }
-        else {
-            galvociai.push_back(s);
-        }
+        double galutinisRez = (pasirinkimas == 'a') ? s.Vidurkiorez : s.Medianosrez;
+        if (galutinisRez < 5.0) vargsiukai.push_back(s);
+        else galvociai.push_back(s);
     }
-    cout << "Studentu rusiavimas i dvi grupes uztruko: " << laikmatis_rusiavimo.elapsed() << " s" << endl;
+    cout << std::fixed << std::setprecision(6) << "Studentu rusiavimas i dvi grupes (vector) uztruko: " << laikmatis_rusiavimo.elapsed() << " s" << endl;
+    char rikiavimas_pasirinkimas;
+    while (true) {
+        cout << "Pagal ka rikiuoti studentus faile?\n" << " a - pagal pavarde\n" << " b - pagal varda\n" << " c - pagal galutini pazymi\n"; cin >> rikiavimas_pasirinkimas;
+        if (rikiavimas_pasirinkimas == 'a' || rikiavimas_pasirinkimas == 'b' || rikiavimas_pasirinkimas == 'c') break;
+        else cout << "Ivesta neteisingai. Bandykite dar karta." << endl;
+    }
     auto rikiavimas = [&](const Studentas& a, const Studentas& b) {
-        double galutinisA, galutinisB;
-        if (pasirinkimas == 'a') {
-            galutinisA = a.Vidurkiorez;
-            galutinisB = b.Vidurkiorez;
-        }
+        if (rikiavimas_pasirinkimas == 'a') return a.pav < b.pav;
+        else if (rikiavimas_pasirinkimas == 'b') return a.vard < b.vard;
         else {
-            galutinisA = a.Medianosrez;
-            galutinisB = b.Medianosrez;
+            double galutinisA = (pasirinkimas == 'a') ? a.Vidurkiorez : a.Medianosrez;
+            double galutinisB = (pasirinkimas == 'a') ? b.Vidurkiorez : b.Medianosrez;
+            return galutinisA < galutinisB;
         }
-        return galutinisA < galutinisB;
-        };
+    };
     std::sort(vargsiukai.begin(), vargsiukai.end(), rikiavimas);
     std::sort(galvociai.begin(), galvociai.end(), rikiavimas);
     Laikmatis laikmatis_failu_rasymo;
-    std::ofstream foutvargsiukai("vargsiukai.txt");
-    std::ofstream foutgalvociai("galvociai.txt");
+    std::ofstream foutvargsiukai("vargsiukai_vector.txt");
+    std::ofstream foutgalvociai("galvociai_vector.txt");
     if (!foutvargsiukai || !foutgalvociai) {
         cout << "Nepavyko sukurti failu vargsiukams arba galvociams" << endl;
         return;
     }
     for (auto& s : vargsiukai) {
-        if (pasirinkimas == 'a') {
-            double galutinisVid = s.Vidurkiorez;
-            foutvargsiukai << s.pav << " " << s.vard
-                << " Galutinis (Vid.): " << std::fixed << std::setprecision(2) << galutinisVid << "\n";
-        }
-        else {
-            double galutinisMed = s.Medianosrez;
-            foutvargsiukai << s.pav << " " << s.vard
-                << " Galutinis (Med.): " << std::fixed << std::setprecision(2) << galutinisMed << "\n";
-        }
+        double galutinis = (pasirinkimas == 'a') ? s.Vidurkiorez : s.Medianosrez;
+        foutvargsiukai << s.pav << " " << s.vard << " Galutinis: " << std::fixed << std::setprecision(2) << galutinis << "\n";
     }
     for (auto& s : galvociai) {
-        if (pasirinkimas == 'a') {
-            double galutinisVid = s.Vidurkiorez;
-            foutgalvociai << s.pav << " " << s.vard
-                << " Galutinis (Vid.): " << std::fixed << std::setprecision(2) << galutinisVid << "\n";
-        }
-        else {
-            double galutinisMed = s.Medianosrez;
-            foutgalvociai << s.pav << " " << s.vard
-                << " Galutinis (Med.): " << std::fixed << std::setprecision(2) << galutinisMed << "\n";
-        }
+        double galutinis = (pasirinkimas == 'a') ? s.Vidurkiorez : s.Medianosrez;
+        foutgalvociai << s.pav << " " << s.vard << " Galutinis: " << std::fixed << std::setprecision(2) << galutinis << "\n";
     }
     foutvargsiukai.close();
     foutgalvociai.close();
-    cout << "Studentu isvedimas i suskirstymo failus uztruko: " << laikmatis_failu_rasymo.elapsed() << " s" << endl;
-    cout << "Sukurti 'vargsiukai.txt' ir 'galvociai.txt'" << endl;
+    cout << std::fixed << std::setprecision(6) << "Studentu isvedimas i failus uztruko: " << laikmatis_failu_rasymo.elapsed() << " s" << endl;
+    cout << "Sukurti failai: 'vargsiukai_vector.txt' ir 'galvociai_vector.txt'" << endl;
+}
+
+void suskirstyti(const std::list<Studentas>& Grupe) {
+    char pasirinkimas;
+    while (true) {
+        cout << "Pasirinkite pagal ka suskirstyti studentus:\n" << " a - pagal vidurki\n b - pagal mediana\n"; cin >> pasirinkimas;
+        if (pasirinkimas == 'a' || pasirinkimas == 'b') break;
+        else cout << "Ivesta neteisingai. Bandykite dar karta." << endl;
+    }
+    Laikmatis laikmatis_rusiavimo;
+    std::list<Studentas> vargsiukai;
+    std::list<Studentas> galvociai;
+    for (auto& s : Grupe) {
+        double galutinisRez = (pasirinkimas == 'a') ? s.Vidurkiorez : s.Medianosrez;
+        if (galutinisRez < 5.0) vargsiukai.push_back(s);
+        else galvociai.push_back(s);
+    }
+    cout << std::fixed << std::setprecision(6) << "Studentu rusiavimas i dvi grupes (list) uztruko: " << laikmatis_rusiavimo.elapsed() << " s" << endl;
+    char rikiavimas_pasirinkimas;
+    while (true) {
+        cout << "Pagal ka rikiuoti studentus faile?\n" << " a - pagal pavarde\n" << " b - pagal varda\n" << " c - pagal galutini pazymi\n"; cin >> rikiavimas_pasirinkimas;
+        if (rikiavimas_pasirinkimas == 'a' || rikiavimas_pasirinkimas == 'b' || rikiavimas_pasirinkimas == 'c') break;
+        else cout << "Ivesta neteisingai. Bandykite dar karta." << endl;
+    }
+    auto rikiavimas = [&](const Studentas& a, const Studentas& b) {
+        if (rikiavimas_pasirinkimas == 'a') return a.pav < b.pav;
+        else if (rikiavimas_pasirinkimas == 'b') return a.vard < b.vard;
+        else {
+            double galutinisA = (pasirinkimas == 'a') ? a.Vidurkiorez : a.Medianosrez;
+            double galutinisB = (pasirinkimas == 'a') ? b.Vidurkiorez : b.Medianosrez;
+            return galutinisA < galutinisB;
+        }
+    };
+    vargsiukai.sort(rikiavimas);
+    galvociai.sort(rikiavimas);
+    Laikmatis laikmatis_failu_rasymo;
+    std::ofstream foutv("vargsiukai_list.txt");
+    std::ofstream foutg("galvociai_list.txt");
+    for (auto& s : vargsiukai) {
+        double galutinis = (pasirinkimas == 'a') ? s.Vidurkiorez : s.Medianosrez;
+        foutv << s.pav << " " << s.vard << " Galutinis: " << std::fixed << std::setprecision(2) << galutinis << "\n";
+    }
+    for (auto& s : galvociai) {
+        double galutinis = (pasirinkimas == 'a') ? s.Vidurkiorez : s.Medianosrez;
+        foutg << s.pav << " " << s.vard << " Galutinis: " << std::fixed << std::setprecision(2) << galutinis << "\n";
+    }
+    foutv.close();
+    foutg.close();
+    cout << std::fixed << std::setprecision(6) << "Studentu isvedimas i failus uztruko: " << laikmatis_failu_rasymo.elapsed() << " s" << endl;
+    cout << "Sukurti failai: 'vargsiukai_list.txt' ir 'galvociai_list.txt'" << endl;
 }
