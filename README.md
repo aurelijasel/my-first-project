@@ -40,7 +40,7 @@ APRAŠYMAS
 
 Programa leidžia skaičiuoti studentų rezultatus arba vykdyti testavimą.
 
-Programa leidžia pasirinkti konteinerio tipą: `vector` arba `list`.  
+Programa leidžia pasirinkti konteinerio tipą: vector arba list.  
 
 Studentai gali būti įvedami rankiniu būdu, generuojami atsitiktinai arba nuskaitomi iš failo. 
 
