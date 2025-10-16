@@ -61,3 +61,40 @@ Rūšiavimui į grupes
 Įrašymui į failus  
 
 Rezultatai parodomi txt failuose, leidžiant palyginti studentų rezultatus arba `vector` ir `list` konteinerių veikimo spartą.  
+
+
+RANKINIS ĮVEDIMAS
+
+Įvedus studento rankiniu būdu duomenis, ekrane matomas objekto saugojimo atminties adresas:
+
+Vector atveju:
+
+Iveskite 1 studenta
+
+Iveskite pavarde: Jonaitis
+
+Iveskite varda: Jonas
+
+Iveskite pazymi: 6
+
+Ar norite ivesti dar viena pazymi? (taip/ne): ne
+
+Iveskite egzamina: 7
+
+Studento objektas saugomas adresu: 000002AF25106120
+
+List atveju:
+
+Iveskite 1 studenta
+
+Iveskite pavarde: Jonaitis
+
+Iveskite varda: Jonas
+
+Iveskite pazymi: 6
+
+Ar norite ivesti dar viena pazymi? (taip/ne): ne
+
+Iveskite egzamina: 7
+
+Studento objektas saugomas adresu: 0000022402A862D0
