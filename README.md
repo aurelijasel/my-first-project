@@ -34,3 +34,30 @@ TESTAVIMO REZULTATAI
 | list        | studentai1000000.txt  | 5.495589        | 2.771440       | 2.771307     | 11.038336   |
 | vector      | studentai10000000.txt | 51.483759       | 19.294265      | 20.425165    | 91.203189   |
 | list        | studentai10000000.txt | 52.409604       | 31.105185      | 30.783026    | 114.297815  | 
+
+
+APRAŠYMAS
+
+Programa leidžia skaičiuoti studentų rezultatus arba vykdyti testavimą.
+
+Programa leidžia pasirinkti konteinerio tipą: `vector` arba `list`.  
+
+Studentai gali būti įvedami rankiniu būdu, generuojami atsitiktinai arba nuskaitomi iš failo. 
+
+Studentai skirstomi į dvi grupes:
+
+Vargšiukai – galutinis pažymys < 5  
+
+Galvočiai - galutinis pažymys ≥ 5  
+
+Galima pasirinkti, pagal ką rūšiuoti studentus: pavardę, vardą arba galutinį pažymį.  
+
+Programa matuoja veikimo trukmę:
+
+Nuskaitymui  
+
+Rūšiavimui į grupes  
+
+Įrašymui į failus  
+
+Rezultatai parodomi txt failuose, leidžiant palyginti studentų rezultatus arba `vector` ir `list` konteinerių veikimo spartą.  
