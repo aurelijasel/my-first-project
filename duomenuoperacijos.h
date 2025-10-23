@@ -12,5 +12,7 @@ void suskirstyti(const std::vector<Studentas>& Grupe);
 void suskirstyti(const std::list<Studentas>& Grupe);
 void suskirstyti(std::vector<Studentas>& grupe, char pagalkaskirstyti, char pagalkarikiuoti);
 void suskirstyti(std::list<Studentas>& grupe, char pagalkaskirstyti, char pagalkarikiuoti);
+void suskirstyti(std::vector<Studentas>& grupe, char pagalkaskirstyti, char pagalkarikiuoti, int strategija);
+void suskirstyti(std::list<Studentas>& grupe, char pagalkaskirstyti, char pagalkarikiuoti, int strategija);
 
 #endif
