@@ -162,8 +162,8 @@ Studento objektas saugomas adresu: 0000022402A862D0
 
 | Versija | Aprašymas |
 |----------|------------|
-| **v.pradinė** | Programa leidžia įvesti studentų duomenis, apskaičiuoti galutinį balą pagal vidurkį, medianą arba abu. |
-| **v0.1** | Pridėta duomenų nuskaitymo iš failo galimybė ir išvedimo formatavimas. |
-| **v0.2** | Pridėta atsitiktinė duomenų failų generacija ir veikimo trukmės (failų kūrimo, skaitymo, rūšiavimo) matavimas. |
-| **v0.3** | Pridėtas konteinerių (vector ir list) veikimo trukmės palyginimas. |
-| **v1.0** | Pridėtas 3 strategijų (rūšiavimo metodų) palyginimas tiek vector, tiek list. |
+| v.pradinė | Programa leidžia įvesti studentų duomenis, apskaičiuoti galutinį balą pagal vidurkį, medianą arba abu. |
+| v0.1 | Pridėta duomenų nuskaitymo iš failo galimybė ir išvedimo formatavimas. |
+| v0.2 | Pridėta atsitiktinė duomenų failų generacija ir veikimo trukmės (failų kūrimo, skaitymo, rūšiavimo) matavimas. |
+| v0.3 | Pridėtas konteinerių (vector ir list) veikimo trukmės palyginimas. |
+| v1.0 | Pridėtas 3 strategijų (rūšiavimo metodų) palyginimas tiek vector, tiek list. |
