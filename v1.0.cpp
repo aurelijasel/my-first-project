@@ -27,8 +27,8 @@ int main() {
             "studentai1000.txt",
             "studentai10000.txt",
             "studentai100000.txt",
-            //"studentai1000000.txt",
-            //"studentai10000000.txt"
+            "studentai1000000.txt",
+            "studentai10000000.txt"
         };
         std::ofstream fout("testavimorezultatai.txt");
         if (!fout) {
