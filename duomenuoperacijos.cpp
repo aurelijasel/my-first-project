@@ -105,7 +105,7 @@ void suskirstyti(const std::vector<Studentas>& Grupe) {
             double galutinisB = (pasirinkimas == 'a') ? b.Vidurkiorez : b.Medianosrez;
             return galutinisA < galutinisB;
         }
-        };
+    };
     std::sort(vargsiukai.begin(), vargsiukai.end(), rikiavimas);
     std::sort(galvociai.begin(), galvociai.end(), rikiavimas);
     Laikmatis laikmatis_failu_rasymo;
@@ -159,7 +159,7 @@ void suskirstyti(const std::list<Studentas>& Grupe) {
             double galutinisB = (pasirinkimas == 'a') ? b.Vidurkiorez : b.Medianosrez;
             return galutinisA < galutinisB;
         }
-        };
+    };
     vargsiukai.sort(rikiavimas);
     galvociai.sort(rikiavimas);
     Laikmatis laikmatis_failu_rasymo;
@@ -195,10 +195,10 @@ void suskirstyti(std::vector<Studentas>& grupe, char pagalkaskirstyti, char paga
             double galutinisB = (pagalkaskirstyti == 'a') ? b.Vidurkiorez : b.Medianosrez;
             return galutinisA < galutinisB;
         }
-        };
+    };
     std::sort(vargsiukai.begin(), vargsiukai.end(), rikiavimas);
     std::sort(galvociai.begin(), galvociai.end(), rikiavimas);
-    std::ofstream foutv("vargsiukai_vector.txt"), foutg("galvociai_vector.txt");
+    std::ofstream foutv("vargsiukai_vector_start1.txt"), foutg("galvociai_vector_strat1.txt");
     for (auto& s : vargsiukai) {
         double galutinis = (pagalkaskirstyti == 'a') ? s.Vidurkiorez : s.Medianosrez;
         foutv << s.pav << " " << s.vard << " Galutinis: " << std::fixed << std::setprecision(2) << galutinis << "\n";
@@ -225,7 +225,7 @@ void suskirstyti(std::list<Studentas>& grupe, char pagalkaskirstyti, char pagalk
             double galutinisB = (pagalkaskirstyti == 'a') ? b.Vidurkiorez : b.Medianosrez;
             return galutinisA < galutinisB;
         }
-        };
+    };
     vargsiukai.sort(rikiavimas);
     galvociai.sort(rikiavimas);
     std::ofstream foutv("vargsiukai_list.txt"), foutg("galvociai_list.txt");
@@ -315,4 +315,99 @@ void suskirstyti(std::list<Studentas>& grupe, char pagalkaskirstyti, char pagalk
         double gal = (pagalkaskirstyti == 'a') ? s.Vidurkiorez : s.Medianosrez;
         foutg << s.pav << " " << s.vard << " Galutinis: " << std::fixed << std::setprecision(2) << gal << "\n";
     }
+}
+
+void suskirstyti_optimizuota(std::vector<Studentas>& grupe, char pagalkaskirstyti, char pagalkarikiuoti) {
+    Laikmatis laikmatis; // Bendras laikmatis
+
+    auto yra_vargsiukas = [&](const Studentas& s) {
+        double gal = (pagalkaskirstyti == 'a') ? s.Vidurkiorez : s.Medianosrez;
+        return gal < 5.0;
+        };
+
+    // Tikras r?šiavimo laikas
+    Laikmatis rusiavimoLaikas;
+    auto it = std::partition(grupe.begin(), grupe.end(), yra_vargsiukas);
+
+    auto rikiavimas = [&](const Studentas& a, const Studentas& b) {
+        if (pagalkarikiuoti == 'a') return a.pav < b.pav;
+        else if (pagalkarikiuoti == 'b') return a.vard < b.vard;
+        else {
+            double galA = (pagalkaskirstyti == 'a') ? a.Vidurkiorez : a.Medianosrez;
+            double galB = (pagalkaskirstyti == 'a') ? b.Vidurkiorez : b.Medianosrez;
+            return galA < galB;
+        }
+        };
+
+    std::sort(grupe.begin(), it, rikiavimas);
+    std::sort(it, grupe.end(), rikiavimas);
+    double rusiavimo_trukme = rusiavimoLaikas.elapsed();
+
+    // Fail? rašymas atskirai
+    Laikmatis irasymoLaikas;
+    std::ofstream foutv("vargsiukai_vector_strat3.txt");
+    std::ofstream foutg("galvociai_vector_strat3.txt");
+
+    for (auto i = grupe.begin(); i != it; ++i) {
+        double gal = (pagalkaskirstyti == 'a') ? i->Vidurkiorez : i->Medianosrez;
+        foutv << i->pav << " " << i->vard << " Galutinis: "
+            << std::fixed << std::setprecision(2) << gal << "\n";
+    }
+    for (auto i = it; i != grupe.end(); ++i) {
+        double gal = (pagalkaskirstyti == 'a') ? i->Vidurkiorez : i->Medianosrez;
+        foutg << i->pav << " " << i->vard << " Galutinis: "
+            << std::fixed << std::setprecision(2) << gal << "\n";
+    }
+    double irasymo_trukme = irasymoLaikas.elapsed();
+
+    cout << std::fixed << std::setprecision(6)
+        << "3 strategijos (vector partition) Rusiavimas: " << rusiavimo_trukme << " s, "
+        << "Irasymas: " << irasymo_trukme << " s, "
+        << "Bendras: " << laikmatis.elapsed() << " s" << endl;
+}
+
+
+// 3 strategija list versijai — efektyvus remove_if + splice
+void suskirstyti_optimizuota(std::list<Studentas>& grupe, char pagalkaskirstyti, char pagalkarikiuoti) {
+    Laikmatis laikmatis;
+    std::list<Studentas> vargsiukai;
+
+    for (auto it = grupe.begin(); it != grupe.end();) {
+        double gal = (pagalkaskirstyti == 'a') ? it->Vidurkiorez : it->Medianosrez;
+        if (gal < 5.0) {
+            vargsiukai.splice(vargsiukai.end(), grupe, it++);
+        }
+        else {
+            ++it;
+        }
+    }
+
+    auto rikiavimas = [&](const Studentas& a, const Studentas& b) {
+        if (pagalkarikiuoti == 'a') return a.pav < b.pav;
+        else if (pagalkarikiuoti == 'b') return a.vard < b.vard;
+        else {
+            double galA = (pagalkaskirstyti == 'a') ? a.Vidurkiorez : a.Medianosrez;
+            double galB = (pagalkaskirstyti == 'a') ? b.Vidurkiorez : b.Medianosrez;
+            return galA < galB;
+        }
+        };
+
+    vargsiukai.sort(rikiavimas);
+    grupe.sort(rikiavimas);
+
+    std::ofstream foutv("vargsiukai_list_strat3.txt");
+    std::ofstream foutg("galvociai_list_strat3.txt");
+
+    for (auto& s : vargsiukai) {
+        double gal = (pagalkaskirstyti == 'a') ? s.Vidurkiorez : s.Medianosrez;
+        foutv << s.pav << " " << s.vard << " Galutinis: " << std::fixed << std::setprecision(2) << gal << "\n";
+    }
+    for (auto& s : grupe) {
+        double gal = (pagalkaskirstyti == 'a') ? s.Vidurkiorez : s.Medianosrez;
+        foutg << s.pav << " " << s.vard << " Galutinis: " << std::fixed << std::setprecision(2) << gal << "\n";
+    }
+
+    cout << std::fixed << std::setprecision(6)
+        << "3 strategijos (list splice) veikimo laikas: " << laikmatis.elapsed() << " s" << endl;
+    cout << "Sukurti failai: vargsiukai_list_strat3.txt, galvociai_list_strat3.txt" << endl;
 }
