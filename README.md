@@ -1,40 +1,39 @@
-# Studentų duomenų apdorojimo ir analizės sistema
+# Studentų duomenų apdorojimo ir analizės programa
 
 Ši programa leidžia:
-- generuoti, nuskaityti ir apdoroti studentų pažymius,
-- suskirstyti studentus į dvi grupes („vargšiukai“ ir „galvočiai“),
-- palyginti **`vector`** ir **`list`** konteinerių našumą bei atminties sąnaudas,
-- pasirinkti skirtingas **strategijas** duomenų apdorojimui,
-- matuoti skirtingų operacijų (nuskaitymo, rikiavimo, įrašymo) laikus.
+- įvesti, generuoti, nuskaityti ir apdoroti studentų pažymius,
+- suskirstyti studentus į dvi grupes (vargsiukai ir galvociai),
+- pasirinkti skirtingas vieną iš trijų strategijų duomenų apdorojimui,
+- palyginti vector ir list konteinerių veikimo spartą ir atminties panaudojimą,
+- matuoti skirtingų operacijų (nuskaitymo, įrašymo) laikus.
 
----
 
 ## Naudojimosi instrukcija
 
 ### Paleidimas
-
-1️⃣ Atsidarykite projektą (pvz. Visual Studio ar Code::Blocks).  
-2️⃣ Sukompiliuokite ir paleiskite failą **main.cpp**.  
-3️⃣ Pasirinkite vieną iš režimų:
+1. Atsidarykite projektą.  
+2. Sukompiliuokite ir paleiskite failą v1.0.cpp.  
+3. Pasirinkite vieną iš režimų:
 ```
-1 - Įprastas programos veikimas
+1 - Iprastas programos veikimas
 2 - Automatinis testavimas (vector vs list)
 ```
 
 ### Įprastas režimas
 Leidžia įvesti studentus:
-- **rankiniu būdu**,  
-- **automatiškai sugeneruoti**,  
-- **nuskaityti iš failo**.
+- rankiniu būdu,  
+- automatiškai sugeneruoti,  
+- nuskaityti iš failo.
 
 Tada galima pasirinkti:
-- pagal ką skaičiuoti galutinį pažymį (vidurkį / medianą),
+- su kokiu konteineriu rūšiuoti studentas (vector / list),
+- pagal ką skaičiuoti galutinį pažymį (vidurkį / medianą / abu),
 - pagal ką rikiuoti (vardą / pavardę / pažymį).
 
-Rezultatai įrašomi į **rezultatai.txt** bei sugeneruojami du failai:
+Rezultatai įrašomi į rezultatai.txt bei sugeneruojami du failai:
 ```
-vargsiukai_*.txt
-galvociai_*.txt
+vargsiukai_*_strat1.txt
+galvociai_*_strat1.txt
 ```
 
 ### Automatinis testavimas
@@ -46,28 +45,29 @@ studentai100000.txt
 studentai1000000.txt
 studentai10000000.txt
 ```
+Galima pasirinkti:
+- pagal kokią strategiją vykdyti testavimą,
+- pagal ką suskirstyti (vidurkį / medianą),
+- pagal ką rikiuoti (vardą / pavardę / pažymį),
 
-Rezultatai įrašomi į **testavimorezultatai.txt**.
+Rezultatai įrašomi į testavimorezultatai.txt.
 
----
 
 ## Strategijų aprašymas
 
-| Strategija | Aprašymas | Naudojimo atvejis |
-|-------------|------------|------------------|
-| **1** | Sukuriami du nauji konteineriai: vienas vargšiukams, kitas galvočiams. | Paprasta, bet reikalauja daugiau atminties. |
-| **2** | Sukuriamas tik vienas naujas konteineris. Vargšiukai ištrinami iš bendro sąrašo. | Efektyviau atminties atžvilgiu, bet lėtesnė dėl trynimų. |
-| **3** | Optimizuota versija – naudojami STL algoritmai ir efektyvus konteinerių tvarkymas. | Greičiausia dideliems duomenų kiekiams. |
-
----
+| Strategija | Aprašymas |
+|-------------|------------|
+| **1** | Sukuriami du nauji konteineriai: vienas vargšiukams, kitas galvočiams. |
+| **2** | Sukuriamas tik vienas naujas konteineris. Vargšiukai ištrinami iš bendro sąrašo. |
+| **3** | Optimizuota versija – naudojami STL algoritmai ir efektyvus konteinerių tvarkymas. |
 
 ## Testavimo aplinka
 
-**Aparatinė įranga:**
+**Testavimo sistema:**
 ```
-CPU: Intel(R) Core(TM) i7-8650U @ 1.90GHz
-RAM: 16 GB
-SSD: Samsung NVMe 238 GB
+CPU: Intel(R) Core(TM) i7-8650U CPU @ 1.90GHz 2.11 GHz
+RAM: 16,0 GB (15,9 GB usable)
+HDD: 238 GB SSD SAMSUNG MZVLW256HEHP-000L7
 ```
 
 **Testuoti failai:**
@@ -79,9 +79,8 @@ studentai1000000.txt
 studentai10000000.txt
 ```
 
----
 
-## Strategijos 1 – Du nauji konteineriai
+**Strategija 1 – Du nauji konteineriai**
 
 | Konteineris | Failas | Nuskaitymas (s) | Rūšiavimas (s) | Įrašymas (s) | Bendras (s) | Atmintis (B) |
 |--------------|---------|----------------|----------------|--------------|--------------|--------------|
@@ -96,9 +95,7 @@ studentai10000000.txt
 | vector | studentai10000000.txt | 54.182993 | 19.913085 | 20.829315 | 94.925393 | 2160000120 |
 | list | studentai10000000.txt | 53.942888 | 30.774006 | 30.003270 | 114.720164 | 818177624 |
 
----
-
-## Strategijos 2 – Vienas naujas konteineris
+**Strategija 2 – Vienas naujas konteineris**
 
 | Konteineris | Failas | Nuskaitymas (s) | Rūšiavimas (s) | Įrašymas (s) | Bendras (s) | Atmintis (B) |
 |--------------|---------|----------------|----------------|--------------|--------------|--------------|
@@ -109,9 +106,9 @@ studentai10000000.txt
 | vector | studentai100000.txt | 1.015333 | 1.244928 | 0.311839 | 2.572100 | 21625972 |
 | list | studentai100000.txt | 0.947579 | 1.365441 | 0.324875 | 2.637895 | 8182596 |
 
----
+2 strategija neveikia su dideliais duomenų kiekiais (1000000 ir 10000000 įrašų), nes ji kiekvienam vargšiukui naudoja erase() funkciją vector konteineryje. Kiekvienas erase() kvietimas perstumia visus likusius elementus, todėl operacijos sudėtingumas tampa O(n²). Dėl to, kai duomenu kiekis yra virš milijono, programa visai nebaigia darbo, nes procesorius užimtas nuolatiniu elementų perstumimu. Ši strategija veikia tik su mažais duomenų kiekiais.
 
-## Strategijos 3 – Optimizuota (naudojami STL algoritmai)
+**Strategija 3 – Optimizuota (naudojami STL algoritmai)**
 
 | Konteineris | Failas | Nuskaitymas (s) | Rūšiavimas (s) | Įrašymas (s) | Bendras (s) | Atmintis (B) |
 |--------------|---------|----------------|----------------|--------------|--------------|--------------|
@@ -126,48 +123,47 @@ studentai10000000.txt
 | vector | studentai10000000.txt | 51.483884 | 19.294318 | 20.425229 | 91.203431 | 2160000120 |
 | list | studentai10000000.txt | 52.409655 | 31.105266 | 30.783094 | 114.297015 | 818177624 |
 
----
+**Išvados**
 
-## Išvados
+- Mažiems duomenų kiekiams (1000–10000) vector ir list veikimas trunka panašiai.  
+- Didėjant įrašų kiekiui, vector tampa efektyvesnis – greitesnis bendras veikimo laikas.  
+- Vector konteineris sunaudoja daugiau atminties.   
+- Optimizuota strategija (3) yra efektyviausia.
 
-- Mažiems duomenų kiekiams (`1000–10000`) **vector** ir **list** veikia panašiai.  
-- Didėjant įrašų kiekiui, **vector** tampa efektyvesnis – greitesnis bendras veikimo laikas ir mažesnės atminties sąnaudos.  
-- **List** konteineris sunaudoja daugiau RAM ir rikiuoja lėčiau dėl papildomų rodyklių.  
-- **Strategija 2** yra atminties požiūriu efektyvesnė, tačiau labai lėta dideliuose duomenų rinkiniuose, nes vyksta daug trynimų.  
-- **Optimizuota strategija (3)** duoda žymų našumo šuolį – ypač nuo `100000` įrašų.
 
----
+## Rankinis įvedimas
 
-## Kodėl testas su 1 000 000 ir 10 000 000 įrašų neveikia (strategija 2)
+Įvedus studento duomenis rankiniu būdu, ekrane matomas objekto saugojimo atminties adresas:
 
-Bandant testuoti su dideliais failais:
-- programa užima labai daug atminties (kiekvienas `Studentas` turi `std::vector<int>` pažymiams),
-- `vector` ir `list` kopijavimai sukuria daug papildomų objektų,
-- todėl **užimama RAM viršija 1–2 GB**,
-- o tai gali sukelti **sulėtėjimą arba „bad_alloc“ klaidą**.
-
-Dėl šių priežasčių testai su `studentai1000000.txt` ir `studentai10000000.txt` yra išjungti automatinio testavimo režime:
-```cpp
-// "studentai1000000.txt",
-// "studentai10000000.txt"
+**Vector atveju:**
+```
+Iveskite 1 studenta
+Iveskite pavarde: Jonaitis
+Iveskite varda: Jonas
+Iveskite pazymi: 6
+Ar norite ivesti dar viena pazymi? (taip/ne): ne
+Iveskite egzamina: 7
+Studento objektas saugomas adresu: 000002AF25106120
 ```
 
----
+**List atveju:**
+```
+Iveskite 1 studenta
+Iveskite pavarde: Jonaitis
+Iveskite varda: Jonas
+Iveskite pazymi: 6
+Ar norite ivesti dar viena pazymi? (taip/ne): ne
+Iveskite egzamina: 7
+Studento objektas saugomas adresu: 0000022402A862D0
+```
+
 
 ## Release istorija
 
-| Versija | Pavadinimas | Aprašymas |
-|----------|--------------|------------|
-| **v0.1** | Pagrindinė programa | Studentų įvedimas ranka, vidurkio ir medianos skaičiavimas |
-| **v0.5** | Failų generavimas | Galimybė sugeneruoti failus su n studentų |
-| **v0.8** | Vector ir List palyginimas | Įtraukti abu konteinerių tipus ir veikimo laikų matavimas |
-| **v1.0** | Strategijų testavimas | Įgyvendintos trys studentų skirstymo strategijos ir automatinis testavimas |
-
----
-
-## Testavimo pakartojamumas
-
-Visi testai buvo paleisti 3 kartus ir lentelėse pateikti **vidutiniai rezultatai**.  
-Testai atlikti tuo pačiu kompiuteriu be foninių procesų, siekiant užtikrinti rezultatų patikimumą.
-
----
+| Versija | Aprašymas |
+|----------|------------|
+| **v.pradinė** | Programa leidžia įvesti studentų duomenis, apskaičiuoti galutinį balą pagal vidurkį, medianą arba abu. |
+| **v0.1** | Pridėta duomenų nuskaitymo iš failo galimybė ir išvedimo formatavimas. |
+| **v0.2** | Pridėta atsitiktinė duomenų failų generacija ir veikimo trukmės (failų kūrimo, skaitymo, rūšiavimo) matavimas. |
+| **v0.3** | Pridėtas konteinerių (vector ir list) veikimo trukmės palyginimas. |
+| **v1.0** | Pridėtas 3 strategijų (rūšiavimo metodų) palyginimas tiek vector, tiek list. |
