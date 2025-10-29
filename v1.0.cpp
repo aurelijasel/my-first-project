@@ -46,8 +46,8 @@ int main() {
             fout << "Naudota STRATEGIJA 2: Vienas naujas konteineris (vargsiukai traukiami ir trinami is bendro).\n" << endl;
         else if (strategija == 3)
             fout << "Naudota STRATEGIJA 3 - Optimizuota (naudojami darbo su konteineriais algoritmai)\n";
-        fout << left << setw(13) << "Konteineris" << setw(23) << "Failas" << setw(18) << "Nuskaitymas (s)" << setw(16) << "Rusiavimas (s)" << setw(14) << "Irasymas (s)" << setw(13) << "Bendras (s)" << setw(15) << "Atmintis (B)" << "\n";
-        fout << std::string(109, '-') << "\n";
+        fout << left << setw(13) << "Konteineris" << setw(23) << "Failas" << setw(18) << "Nuskaitymas (s)" << setw(14) << "Irasymas (s)" << setw(13) << "Bendras (s)" << setw(15) << "Atmintis (B)" << "\n";
+        fout << std::string(93, '-') << "\n";
         for (auto& failopavadinimas : test_failai) {
             cout << "\nTestuojamas failas: " << failopavadinimas << endl;
             {
@@ -56,18 +56,29 @@ int main() {
                 std::vector<Studentas> grupe = nuskaityti(failopavadinimas);
                 double t_nuskaitymas = t1.elapsed();
                 t1.reset();
-                suskirstyti(grupe, pagalkaskirstyti, pagalkarikiuoti, strategija);
-                double t_rusiavimas = t1.elapsed();
+
                 Laikmatis t_irasyti_timer;
-                suskirstyti(grupe, pagalkaskirstyti, pagalkarikiuoti, strategija);
+                if (strategija == 3)
+                    suskirstyti_optimizuota(grupe, pagalkaskirstyti, pagalkarikiuoti);
+                else
+                    suskirstyti(grupe, pagalkaskirstyti, pagalkarikiuoti, strategija);
                 double t_irasyti = t_irasyti_timer.elapsed();
+
                 double t_bendras = bendra.elapsed();
+
                 size_t atminties_vector = sizeof(grupe) + grupe.capacity() * sizeof(Studentas);
                 for (auto& s : grupe)
                     atminties_vector += sizeof(Studentas) + s.paz.capacity() * sizeof(int);
-                cout << "Vector (strategija " << strategija << ") atminties uzimtis: " << atminties_vector << " bitai" << endl;
-                fout << left << setw(13) << "vector" << setw(23) << failopavadinimas << setw(18) << std::fixed << std::setprecision(6) << t_nuskaitymas << setw(16) << t_rusiavimas << setw(14) << t_irasyti << setw(13) << t_bendras << setw(15) << atminties_vector << "\n";
+
+                cout << "Vector (strategija " << strategija << ") atminties uzimtis: "
+                    << atminties_vector << " bitai" << endl;
+
+                fout << left << setw(13) << "vector" << setw(23) << failopavadinimas
+                    << setw(18) << std::fixed << std::setprecision(6) << t_nuskaitymas
+                    << setw(14) << t_irasyti
+                    << setw(13) << t_bendras << setw(15) << atminties_vector << "\n";
             }
+
             {
                 Laikmatis bendra, t1;
                 t1.reset();
@@ -75,17 +86,27 @@ int main() {
                 std::list<Studentas> grupe(laikini.begin(), laikini.end());
                 double t_nuskaitymas = t1.elapsed();
                 t1.reset();
-                suskirstyti(grupe, pagalkaskirstyti, pagalkarikiuoti, strategija);
-                double t_rusiavimas = t1.elapsed();
+
                 Laikmatis t_irasyti_timer;
-                suskirstyti(grupe, pagalkaskirstyti, pagalkarikiuoti, strategija);
+                if (strategija == 3)
+                    suskirstyti_optimizuota(grupe, pagalkaskirstyti, pagalkarikiuoti);
+                else
+                    suskirstyti(grupe, pagalkaskirstyti, pagalkarikiuoti, strategija);
                 double t_irasyti = t_irasyti_timer.elapsed();
+
                 double t_bendras = bendra.elapsed();
+
                 size_t atminties_list = sizeof(grupe);
                 for (auto& s : grupe)
                     atminties_list += sizeof(s) + sizeof(void*) * 2 + s.paz.capacity() * sizeof(int);
-                cout << "List (strategija " << strategija << ") atminties uzimtis: " << atminties_list << " bitai" << endl;
-                fout << left << setw(13) << "list" << setw(23) << failopavadinimas << setw(18) << std::fixed << std::setprecision(6) << t_nuskaitymas << setw(16) << t_rusiavimas << setw(14) << t_irasyti << setw(13) << t_bendras << setw(15) << atminties_list << "\n";
+
+                cout << "List (strategija " << strategija << ") atminties uzimtis: "
+                    << atminties_list << " bitai" << endl;
+
+                fout << left << setw(13) << "list" << setw(23) << failopavadinimas
+                    << setw(18) << std::fixed << std::setprecision(6) << t_nuskaitymas
+                    << setw(14) << t_irasyti
+                    << setw(13) << t_bendras << setw(15) << atminties_list << "\n";
             }
         }
         fout.close();
