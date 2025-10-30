@@ -97,16 +97,18 @@ studentai10000000.txt
 
 **Strategija 2 – Vienas naujas konteineris**
 
-| Konteineris | Failas | Nuskaitymas (s) | Rūšiavimas (s) | Įrašymas (s) | Bendras (s) | Atmintis (B) |
-|--------------|---------|----------------|----------------|--------------|--------------|--------------|
-| vector | studentai1000.txt | 0.017118 | 0.023150 | 0.004821 | 0.045089 | 186652 |
-| list | studentai1000.txt | 0.016090 | 0.021913 | 0.004612 | 0.042615 | 85556 |
-| vector | studentai10000.txt | 0.124263 | 0.148355 | 0.032454 | 0.305072 | 1999556 |
-| list | studentai10000.txt | 0.126172 | 0.171224 | 0.032931 | 0.330327 | 832316 |
-| vector | studentai100000.txt | 1.015333 | 1.244928 | 0.311839 | 2.572100 | 21625972 |
-| list | studentai100000.txt | 0.947579 | 1.365441 | 0.324875 | 2.637895 | 8182596 |
-
-2 strategija neveikia su dideliais duomenų kiekiais (1000000 ir 10000000 įrašų), nes ji kiekvienam vargšiukui naudoja erase() funkciją vector konteineryje. Kiekvienas erase() kvietimas perstumia visus likusius elementus, todėl operacijos sudėtingumas tampa O(n²). Dėl to, kai duomenu kiekis yra virš milijono, programa visai nebaigia darbo, nes procesorius užimtas nuolatiniu elementų perstumimu. Ši strategija veikia tik su mažais duomenų kiekiais.
+| Konteineris | Failas | Nuskaitymas (s) | Įrašymas (s) | Bendras (s) | Atmintis (B) |
+|--------------|---------|----------------|--------------|--------------|--------------|
+| vector | studentai1000.txt | 0.008800 | 0.007686 | 0.016487 | 186652 |
+| list | studentai1000.txt | 0.009662 | 0.004400 | 0.014062 | 85556 |
+| vector | studentai10000.txt | 0.078292 | 0.419455 | 0.497747 | 1999556 |
+| list | studentai10000.txt | 0.100894 | 0.043024 | 0.143919 | 832316 |
+| vector | studentai100000.txt | 0.955422 | 65.289058 | 66.244481 | 21625972 |
+| list | studentai100000.txt | 1.414147 | 0.436104 | 1.850251 | 8182596 |
+| vector | studentai1000000.txt | 7.382457 | 90.734936 | 98.117393 | 123318640 |
+| list | studentai1000000.txt | 6.611306 | 8.723771 | 15.335077 | 82075436 |
+| vector | studentai10000000.txt | 66.730549 | 140.426712 | 207.157261 | 2483700352 |
+| list | studentai10000000.txt | 69.522376 | 69.699507 | 139.221883 | 821451136 |
 
 **Strategija 3 – Optimizuota (naudojami STL algoritmai)**
 
@@ -128,6 +130,7 @@ studentai10000000.txt
 - Mažiems duomenų kiekiams (1000–10000) vector ir list veikimas trunka panašiai.  
 - Didėjant įrašų kiekiui, vector tampa efektyvesnis – greitesnis bendras veikimo laikas.  
 - Vector konteineris sunaudoja daugiau atminties.   
+- 2 strategija labai neefektyvi su dideliais duomenų kiekiais (1000000 ir 10000000 įrašų), nes ji kiekvienam vargšiukui naudoja erase() funkciją vector konteineryje. Kiekvienas erase() kvietimas perstumia visus likusius elementus, todėl operacijos sudėtingumas tampa O(n²).
 - Optimizuota strategija (3) yra efektyviausia.
 
 
