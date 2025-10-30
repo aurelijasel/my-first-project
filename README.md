@@ -125,6 +125,8 @@ studentai10000000.txt
 | vector | studentai10000000.txt | 51.483884 | 19.294318 | 20.425229 | 91.203431 | 2160000120 |
 | list | studentai10000000.txt | 52.409655 | 31.105266 | 30.783094 | 114.297015 | 818177624 |
 
+Dažniausiai list buvo greičiau naudoti 2 strategiją.
+
 **Išvados**
 
 - Mažiems duomenų kiekiams (1000–10000) vector ir list veikimas trunka panašiai.  
