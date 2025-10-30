@@ -317,34 +317,6 @@ void suskirstyti(std::list<Studentas>& grupe, char pagalkaskirstyti, char pagalk
     }
 }
 
-void suskirstyti_optimizuota(std::vector<Studentas>& grupe, char pagalkaskirstyti, char pagalkarikiuoti) {
-    Laikmatis laikmatis;
-    auto gauti_galutini = [&](const Studentas& s) {
-        return (pagalkaskirstyti == 'a') ? s.Vidurkiorez : s.Medianosrez;
-    };
-    auto yra_vargsiukas = [&](const Studentas& s) { return gauti_galutini(s) < 5.0; };
-    Laikmatis rusiavimoLaikas;
-    auto it = std::partition(grupe.begin(), grupe.end(), yra_vargsiukas);
-    auto rikiavimas = [&](const Studentas& a, const Studentas& b) {
-        if (pagalkarikiuoti == 'a') return a.pav < b.pav;
-        if (pagalkarikiuoti == 'b') return a.vard < b.vard;
-        return gauti_galutini(a) < gauti_galutini(b);
-    };
-    std::sort(grupe.begin(), it, rikiavimas);
-    std::sort(it, grupe.end(), rikiavimas);
-    double rusiavimo_trukme = rusiavimoLaikas.elapsed();
-    Laikmatis irasymoLaikas;
-    std::ofstream foutv("vargsiukai_vector_strat3.txt");
-    std::ofstream foutg("galvociai_vector_strat3.txt");
-    std::for_each(grupe.begin(), it, [&](const Studentas& s) {
-        foutv << s.pav << " " << s.vard << " Galutinis: " << std::fixed << std::setprecision(2) << gauti_galutini(s) << "\n";
-    });
-    std::for_each(it, grupe.end(), [&](const Studentas& s) {
-        foutg << s.pav << " " << s.vard << " Galutinis: " << std::fixed << std::setprecision(2) << gauti_galutini(s) << "\n";
-    });
-    double irasymo_trukme = irasymoLaikas.elapsed();
-}
-
 void suskirstyti_optimizuota(std::list<Studentas>& grupe, char pagalkaskirstyti, char pagalkarikiuoti) {
     auto kopija1 = grupe;
     auto kopija2 = grupe;
@@ -361,5 +333,80 @@ void suskirstyti_optimizuota(std::list<Studentas>& grupe, char pagalkaskirstyti,
     else {
         cout << "List (strategija 3): greitesne buvo strategija 2, ji ir panaudota.\n";
         suskirstyti(grupe, pagalkaskirstyti, pagalkarikiuoti, 2);
+    }
+}
+
+void suskirstyti_optimizuota_pirma(std::vector<Studentas>& grupe, char pagalkaskirstyti, char pagalkarikiuoti) {
+    Laikmatis t;
+    auto gauti_galutini = [&](const Studentas& s) {
+        return (pagalkaskirstyti == 'a') ? s.Vidurkiorez : s.Medianosrez;
+    };
+    auto yra_vargsiukas = [&](const Studentas& s) { return gauti_galutini(s) < 5.0; };
+    std::vector<Studentas> vargsiukai;
+    std::remove_copy_if(grupe.begin(), grupe.end(), std::back_inserter(vargsiukai),
+        [&](const Studentas& s) { return !yra_vargsiukas(s); });
+    std::vector<Studentas> galvociai;
+    std::remove_copy_if(grupe.begin(), grupe.end(), std::back_inserter(galvociai),
+        [&](const Studentas& s) { return yra_vargsiukas(s); });
+    auto rikiavimas = [&](const Studentas& a, const Studentas& b) {
+        if (pagalkarikiuoti == 'a') return a.pav < b.pav;
+        if (pagalkarikiuoti == 'b') return a.vard < b.vard;
+        return gauti_galutini(a) < gauti_galutini(b);
+    };
+    std::sort(vargsiukai.begin(), vargsiukai.end(), rikiavimas);
+    std::sort(galvociai.begin(), galvociai.end(), rikiavimas);
+    std::ofstream fv("vargsiukai_vector_strat3.txt");
+    std::ofstream fg("galvociai_vector_strat3.txt");
+    std::for_each(vargsiukai.begin(), vargsiukai.end(), [&](const Studentas& s) {
+        fv << s.pav << " " << s.vard << " Galutinis: " << std::fixed << std::setprecision(2) << gauti_galutini(s) << "\n";
+    });
+    std::for_each(galvociai.begin(), galvociai.end(), [&](const Studentas& s) {
+        fg << s.pav << " " << s.vard << " Galutinis: " << std::fixed << std::setprecision(2) << gauti_galutini(s) << "\n";
+    });
+}
+
+void suskirstyti_stl_antros_logika(std::vector<Studentas>& grupe, char pagalkaskirstyti, char pagalkarikiuoti) {
+    Laikmatis t;
+    auto gauti_galutini = [&](const Studentas& s) {
+        return (pagalkaskirstyti == 'a') ? s.Vidurkiorez : s.Medianosrez;
+    };
+    auto yra_vargsiukas = [&](const Studentas& s) { return gauti_galutini(s) < 5.0; };
+    auto partition_point = std::partition(grupe.begin(), grupe.end(), yra_vargsiukas);
+    std::vector<Studentas> vargsiukai(grupe.begin(), partition_point);
+    std::vector<Studentas> galvociai(partition_point, grupe.end());
+    auto rikiavimas = [&](const Studentas& a, const Studentas& b) {
+        if (pagalkarikiuoti == 'a') return a.pav < b.pav;
+        if (pagalkarikiuoti == 'b') return a.vard < b.vard;
+        return gauti_galutini(a) < gauti_galutini(b);
+};
+    std::sort(vargsiukai.begin(), vargsiukai.end(), rikiavimas);
+    std::sort(galvociai.begin(), galvociai.end(), rikiavimas);
+    std::ofstream fv("vargsiukai_vector_strat3.txt");
+    std::ofstream fg("galvociai_vector_strat3.txt");
+    std::for_each(vargsiukai.begin(), vargsiukai.end(), [&](const Studentas& s) {
+        fv << s.pav << " " << s.vard << " Galutinis: " << std::fixed << std::setprecision(2) << gauti_galutini(s) << "\n";
+    });
+    std::for_each(galvociai.begin(), galvociai.end(), [&](const Studentas& s) {
+        fg << s.pav << " " << s.vard << " Galutinis: " << std::fixed << std::setprecision(2) << gauti_galutini(s) << "\n";
+    });
+
+}
+
+void suskirstyti_optimizuota(std::vector<Studentas>& grupe, char pagalkaskirstyti, char pagalkarikiuoti) {
+    auto kopija1 = grupe;
+    auto kopija2 = grupe;
+    Laikmatis t1;
+    suskirstyti_optimizuota_pirma(kopija1, pagalkaskirstyti, pagalkarikiuoti);
+    double laikas1 = t1.elapsed();
+    Laikmatis t2;
+    suskirstyti_stl_antros_logika(kopija2, pagalkaskirstyti, pagalkarikiuoti);
+    double laikas2 = t2.elapsed();
+    if (laikas1 <= laikas2) {
+        cout << "Vector (strategija 3): greitesne buvo strategija 1, ji ir panaudota.\n";
+        suskirstyti_optimizuota_pirma(grupe, pagalkaskirstyti, pagalkarikiuoti);
+    }
+    else {
+        cout << "Vector (strategija 3): greitesne buvo strategija 2, ji ir panaudota.\n";
+        suskirstyti_stl_antros_logika(grupe, pagalkaskirstyti, pagalkarikiuoti);
     }
 }
