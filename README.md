@@ -27,7 +27,7 @@ cmake --build .
 cd Debug
 ```
 ```
-.\Studentu_programa.exe
+.\Studentu_rusiavimo_programa.exe
 ``` 
 
 ### Paleidimas
