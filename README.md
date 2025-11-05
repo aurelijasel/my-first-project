@@ -10,6 +10,26 @@
 
 ## Naudojimosi instrukcija
 
+### Programos atsisiuntimas
+1. Parsisiųsti cmake zip programą (ne ankstesnę, nei 3.25.0 versiją): https://cmake.org/download/
+2. Zip failą išskleisti savo kompiuteryje. Rasti jame aplanką pavadinimu "bin" ir iš to aplanko išsisaugoti failą cmake.exe.
+3. Atsisiųsti CMakeLists.txt, run.bat, .cpp ir .h failus iš GitHub.
+4. Kompiuteryje sukurti aplanką pavadintą "cmaketest". Į jį įkelti CMakeLists.txt, run.bat, cmake.exe failus.
+5. "cmaketest" aplanke sukurti du aplankus: "src", "include". Į "src" aplanką įkelti .cpp failus, o į "include" - .h failus.
+6. Programą paleisti naudojant terminalą, įvedant komandas:
+```
+cmake .\CMakeLists.txt
+```
+```
+cmake --build .
+```
+```
+cd Debug
+```
+```
+.\Studentu_programa.exe
+``` 
+
 ### Paleidimas
 1. Atsidarykite projektą.  
 2. Sukompiliuokite ir paleiskite failą v1.0.cpp.  
